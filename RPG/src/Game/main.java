@@ -58,19 +58,25 @@ public class main {
 		enemies.add(h1);
 		//enemies.add(g2);
 
-		BATTLE.battleStart(party, enemies);
+
+		//BATTLE.battleStart(party, enemies);
 		
 		System.out.println("Link Health: " + Link.getHealth());
 		System.out.println("Zelda Health: " + Zelda.getHealth());
-		
-		/*
-		while(Link.getHealth() > 0 && g1.getHealth() > 0) {
-			Link.attack(g1);
+
+		System.out.println("BATTLE START!");
+		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
+
+			Zelda.attack(Link);
+			Zelda.printStatus();
 			Link.printStatus();
-			g1.printStatus();
-			g1.attack(Link);
+			Link.attack(Zelda);
+			Zelda.printStatus();
 			Link.printStatus();
-			g1.printStatus();
-		}*/
+			Zelda.useSpecial(Link);
+			Zelda.printStatus();
+			Link.printStatus();
+			Link.useSpecial(Zelda);
+		}
 	}
 }

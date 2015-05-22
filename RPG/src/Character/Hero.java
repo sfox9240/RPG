@@ -1,16 +1,19 @@
 package Character;
 import FightClasses.BattleClass;
 import Items.*;
-import FightClasses.RandomGenerator;
+import Skills.DoubleStrike;
+import Skills.Fireball;
 
 public class Hero extends Character {
 	protected BattleClass fightclass;
 	
 	public Hero(String name, BattleClass type) {
 		this.name = name;
-		this.fightclass = type;
-		this.weapon = null;
-		this.health = fightclass.getHealth();
+		fightclass = type;
+		weapon = null;
+		health = fightclass.getHealth();
+		techniquePoints = fightclass.getTechniquePoints();
+		supermove = fightclass.getSkill();
 	}
 	
 	public int getDamageMod() {
@@ -25,15 +28,19 @@ public class Hero extends Character {
 		return getDamageMod() + weapon.getDamage();
 	}
 
+	public void useSpecial(Character opponent) {
+		supermove.attack(this, opponent);
+	}
+
 	@Override
-	public void attack(Character otherguy) {
+	public void attack(Character opponent) {
 		Boolean hit = hitCalculator();
 		if(hit) {
 			//Attack lands
-			otherguy.setHealth(otherguy.getHealth() - getCombatDmg());
-			System.out.println(name + " dealt " + getCombatDmg() + " damage to " + otherguy.getName());
-			if(otherguy.getHealth() <= 0) {
-				System.out.println(otherguy.getName() + " has been felled!");
+			opponent.setHealth(opponent.getHealth() - getCombatDmg());
+			System.out.println(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
+			if(opponent.getHealth() <= 0) {
+				System.out.println(opponent.getName() + " has been felled!");
 			}
 		} else {
 			//Attack missed

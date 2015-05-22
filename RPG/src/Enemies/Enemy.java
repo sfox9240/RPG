@@ -1,9 +1,8 @@
 package Enemies;
 
 import java.util.List;
-
-import Items.*;
 import Character.Character;
+import Items.*;
 
 public abstract class Enemy extends Character {
 	protected String description;
@@ -52,5 +51,9 @@ public abstract class Enemy extends Character {
 			//Attack missed
 			System.out.println(name + " missed their attack!");
 		}
+	}
+
+	public void useSpecial(Character opponent) {
+		supermove.attack(this, opponent);
 	}
 }

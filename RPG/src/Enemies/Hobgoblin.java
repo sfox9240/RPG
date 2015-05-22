@@ -1,6 +1,5 @@
 package Enemies;
 
-import Character.Character;
 import Items.Club;
 
 public class Hobgoblin extends Enemy {
