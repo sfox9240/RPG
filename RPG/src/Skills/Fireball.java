@@ -1,5 +1,7 @@
 package Skills;
 import Character.Character;
+import Items.Intent;
+
 /**
  * Created by piano_000 on 5/22/2015.
  */
@@ -11,5 +13,6 @@ public class Fireball extends Skill{
         this.damage = 6;
         this.element = element.FIRE;
         this.TPCost = 8;
+        this.intent = Intent.HARM;
     }
 }
