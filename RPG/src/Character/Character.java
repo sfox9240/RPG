@@ -13,7 +13,7 @@ public abstract class Character {
 	protected int damageMod;
 	protected Vector<Item> items = new Vector<Item>();
 	protected Weapon weapon;
-	protected Skill supermove;
+	protected Vector<Skill> skills = new Vector<Skill>();
 	protected int techniquePoints;
 	
 	public String getName() {
@@ -34,6 +34,10 @@ public abstract class Character {
 	
 	public Vector<Item> getItems() {
 		return items;
+	}
+
+	public Vector<Skill> getSkills() {
+		return skills;
 	}
 
 	public void printInventory() {
@@ -58,7 +62,9 @@ public abstract class Character {
 	
 	public abstract void attack(Character opponent);
 
-	public abstract void useSpecial(Character opponent);
+	public void useSkill(Character opponent, int skill) {
+		skills.get(skill).attack(this, opponent);
+	}
 	
 	public Boolean hitCalculator() {
 		RandomGenerator generator = new RandomGenerator();

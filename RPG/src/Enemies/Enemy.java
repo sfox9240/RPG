@@ -48,8 +48,4 @@ public abstract class Enemy extends Character {
 			System.out.println(name + " missed their attack!");
 		}
 	}
-
-	public void useSpecial(Character opponent) {
-		supermove.attack(this, opponent);
-	}
 }

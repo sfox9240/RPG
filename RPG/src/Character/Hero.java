@@ -13,7 +13,7 @@ public class Hero extends Character {
 		weapon = null;
 		health = fightclass.getHealth();
 		techniquePoints = fightclass.getTechniquePoints();
-		supermove = fightclass.getSkill();
+		skills.add(fightclass.getSkill());
 	}
 	
 	public int getDamageMod() {
@@ -26,10 +26,6 @@ public class Hero extends Character {
 	
 	public double getCombatDmg() {
 		return getDamageMod() + weapon.getDamage();
-	}
-
-	public void useSpecial(Character opponent) {
-		supermove.attack(this, opponent);
 	}
 
 	@Override

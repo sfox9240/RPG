@@ -1,6 +1,8 @@
 package Skills;
 import Game.Element;
 import Character.Character;
+import Items.Intent;
+
 /**
  * Created by piano_000 on 5/21/2015.
  *
@@ -14,6 +16,7 @@ public abstract class Skill {
     protected double damage;
     protected Element element;
     protected int TPCost;
+    protected Intent intent;
 
     public String getName() {
         return name;
@@ -31,19 +34,24 @@ public abstract class Skill {
 
     public int getTPCost() { return TPCost; }
 
-    //public abstract void attack(Character attacker, Character opponent);
+    public Intent getIntent() {
+        return intent;
+    }
 
     /*
      * General attack type for single hit techniques
      * Check if the technique will lower TP below zero, if not then do
      * the technique.
      */
+
+    /* TODO: Rename "attack" to "use". Also, attack should return to inform if there was enough TP to do the attack*/
+
     public void attack(Character attacker, Character opponent) {
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             Boolean hit = attacker.hitCalculator();
+            System.out.println(attacker.getName() + " used " + name + "!");
             if (hit) {
                 //Attack lands
-                System.out.println(attacker.getName() + " used " + name + "!");
                 opponent.setHealth(opponent.getHealth() - this.damage);
                 System.out.println(attacker.getName() + " dealt " + this.damage + " damage to " + opponent.getName());
                 if (opponent.getHealth() <= 0) {
@@ -51,7 +59,7 @@ public abstract class Skill {
                 }
             } else {
                 //Attack missed
-                System.out.println(opponent.getName() + " missed their attack!");
+                System.out.println(attacker.getName() + " missed their attack!");
             }
             attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
         } else {

@@ -7,6 +7,11 @@ import Character.Hero;
 import Enemies.*;
 import FightClasses.*;
 import Items.*;
+import Skills.BigBangAttack;
+import Skills.Fireball;
+import Skills.Heal;
+import Skills.TripleStrike;
+
 public class main {
 
 	public static void main(String[] args) {
@@ -72,6 +77,13 @@ public class main {
 		Link.printInventory();
 		System.out.println("ZELDA INV:");
 		Zelda.printInventory();
+
+		TripleStrike ts = new TripleStrike();
+		Heal heals = new Heal();
+		Fireball fb = new Fireball();
+		Link.getSkills().add(ts);
+		Link.getSkills().add(fb);
+		Zelda.getSkills().add(heals);
 
 		BATTLE.battleStart(party, enemies);
 		/*System.out.println("BATTLE START!");
