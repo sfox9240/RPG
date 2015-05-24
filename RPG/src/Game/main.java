@@ -35,7 +35,7 @@ public class main {
 		System.out.println("Link's combat damage is: " + Link.getCombatDmg());
 		System.out.println("Zelda's combat damage is: " + Zelda.getCombatDmg());
 
-		/*
+
 		Vector<Hero> party = new Vector<Hero>();
 		party.add(Link);
 		party.add(Zelda);
@@ -59,8 +59,7 @@ public class main {
 		enemies.add(h1);
 		//enemies.add(g2);
 
-		*/
-		//BATTLE.battleStart(party, enemies);
+
 		GreenHerb greenHerb = new GreenHerb();
 		RedHerb redHerb = new RedHerb();
 		Bomb bomb = new Bomb();
@@ -74,7 +73,8 @@ public class main {
 		System.out.println("ZELDA INV:");
 		Zelda.printInventory();
 
-		System.out.println("BATTLE START!");
+		BATTLE.battleStart(party, enemies);
+		/*System.out.println("BATTLE START!");
 		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
 
 			Zelda.attack(Link);
@@ -100,6 +100,6 @@ public class main {
 		}
 
 		Link.printInventory();
-		Zelda.printInventory();
+		Zelda.printInventory();*/
 	}
 }

@@ -11,6 +11,7 @@ public class GreenHerb extends Item {
         name = "Green Herb";
         description = "A natural herb that heals 20 HP";
         heal = 20;
+        this.intent = Intent.HEAL;
     }
 
     public int getHeal() {

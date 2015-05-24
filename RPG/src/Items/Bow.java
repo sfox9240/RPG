@@ -13,5 +13,6 @@ public class Bow extends Weapon{
 		this.twoHanded = twohands;
 		this.damage = generator.weaponDamage();
 		this.augments = normal;
+		this.intent = Intent.EQUIP;
 	}
 }

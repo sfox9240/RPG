@@ -11,6 +11,7 @@ public class Bomb extends Item {
         name = "Bomb";
         description = "A small throwable bomb.";
         damage = 25;
+        intent = Intent.HARM;
     }
 
     @Override
@@ -19,14 +20,14 @@ public class Bomb extends Item {
         if (hit) {
             //Attack lands
             System.out.println(caster.getName() + " used " + name + "!");
-            caster.setHealth(caster.getHealth() - damage);
-            System.out.println(caster.getName() + " dealt " + this.damage + " damage to " + target.getName());
+            target.setHealth(target.getHealth() - damage);
+            System.out.println(caster.getName() + " dealt " + damage + " damage to " + target.getName());
             if (target.getHealth() <= 0) {
                 System.out.println(target.getName() + " has been felled!");
             }
         } else {
             //Attack missed
-            System.out.println(target.getName() + " missed their attack!");
+            System.out.println(caster.getName() + " missed their attack!");
         }
         caster.getItems().remove(this);
     }
