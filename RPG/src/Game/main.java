@@ -34,7 +34,8 @@ public class main {
 		
 		System.out.println("Link's combat damage is: " + Link.getCombatDmg());
 		System.out.println("Zelda's combat damage is: " + Zelda.getCombatDmg());
-		
+
+		/*
 		Vector<Hero> party = new Vector<Hero>();
 		party.add(Link);
 		party.add(Zelda);
@@ -58,11 +59,20 @@ public class main {
 		enemies.add(h1);
 		//enemies.add(g2);
 
-
+		*/
 		//BATTLE.battleStart(party, enemies);
-		
-		System.out.println("Link Health: " + Link.getHealth());
-		System.out.println("Zelda Health: " + Zelda.getHealth());
+		GreenHerb greenHerb = new GreenHerb();
+		RedHerb redHerb = new RedHerb();
+		Bomb bomb = new Bomb();
+
+		Link.getItems().add(greenHerb);
+		Zelda.getItems().add(redHerb);
+		Zelda.getItems().add(bomb);
+
+		System.out.println("LINK INV:");
+		Link.printInventory();
+		System.out.println("ZELDA INV:");
+		Zelda.printInventory();
 
 		System.out.println("BATTLE START!");
 		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
@@ -72,11 +82,24 @@ public class main {
 			Link.printStatus();
 			Link.attack(Zelda);
 			Zelda.printStatus();
+			if(Zelda.getHealth() < 10 && Zelda.getItems().contains(redHerb)) {
+				Zelda.getItems().get(0).use(Zelda, Zelda);
+			}
+			if(Link.getHealth() < 10 && Link.getItems().contains(greenHerb)) {
+				Link.getItems().get(0).use(Link, Link);
+			}
 			Link.printStatus();
 			Zelda.useSpecial(Link);
 			Zelda.printStatus();
 			Link.printStatus();
 			Link.useSpecial(Zelda);
+
+			if(Zelda.getHealth() < 10 && !Zelda.getItems().contains(redHerb)) {
+				Zelda.getItems().get(0).use(Zelda, Link);
+			}
 		}
+
+		Link.printInventory();
+		Zelda.printInventory();
 	}
 }

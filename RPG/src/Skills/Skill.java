@@ -1,5 +1,4 @@
 package Skills;
-import Enemies.Enemy;
 import Game.Element;
 import Character.Character;
 /**

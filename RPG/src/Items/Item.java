@@ -1,4 +1,5 @@
 package Items;
+import Character.Character;
 
 public abstract class Item {
 
@@ -12,4 +13,6 @@ public abstract class Item {
 	public String getDescription() {
 		return description;
 	}
+
+	public abstract void use(Character caster, Character target);
 }

@@ -1,5 +1,5 @@
 package Character;
-import java.util.List;
+import java.util.Vector;
 
 import Items.Item;
 import Items.Weapon;
@@ -11,7 +11,7 @@ public abstract class Character {
 	protected String name;
 	protected double health;
 	protected int damageMod;
-	protected List<Item> items;
+	protected Vector<Item> items = new Vector<Item>();
 	protected Weapon weapon;
 	protected Skill supermove;
 	protected int techniquePoints;
@@ -32,8 +32,14 @@ public abstract class Character {
 		return damageMod;
 	}
 	
-	public List<Item> getItems() {
+	public Vector<Item> getItems() {
 		return items;
+	}
+
+	public void printInventory() {
+		for(int i = 0; i < items.size(); i++) {
+			System.out.println(items.get(i).getName());
+		}
 	}
 	
 	public Weapon getWeapon() {

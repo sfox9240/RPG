@@ -1,6 +1,6 @@
 package Enemies;
 
-import java.util.List;
+import java.util.Vector;
 import Character.Character;
 import Items.*;
 
@@ -21,10 +21,6 @@ public abstract class Enemy extends Character {
 	
 	public int getDamageMod() {
 		return damageMod;
-	}
-	
-	public List<Item> getItems() {
-		return items;
 	}
 	
 	public Weapon getWeapon() {
