@@ -12,7 +12,9 @@ public class Hero extends Character {
 		fightclass = type;
 		weapon = null;
 		health = fightclass.getHealth();
+		maxHealth = fightclass.getHealth();
 		techniquePoints = fightclass.getTechniquePoints();
+		maxTechniquePoints = fightclass.getTechniquePoints();
 		skills.add(fightclass.getSkill());
 	}
 	

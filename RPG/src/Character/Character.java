@@ -10,11 +10,13 @@ public abstract class Character {
 
 	protected String name;
 	protected double health;
+	protected double maxHealth;
 	protected int damageMod;
 	protected Vector<Item> items = new Vector<Item>();
 	protected Weapon weapon;
 	protected Vector<Skill> skills = new Vector<Skill>();
 	protected int techniquePoints;
+	protected int maxTechniquePoints;
 	
 	public String getName() {
 		return name;
@@ -23,9 +25,17 @@ public abstract class Character {
 	public double getHealth() {
 		return health;
 	}
+
+	public double getMaxHealth() {
+		return maxHealth;
+	}
 	
 	public void setHealth(double h) {
 		health = h;
+	}
+
+	public void setMaxHealth(double mh) {
+		maxHealth = mh;
 	}
 	
 	public int getDamageMod() {
@@ -54,6 +64,12 @@ public abstract class Character {
 
 	public void setTechniquePoints(int tp) {
 		techniquePoints = tp;
+	}
+
+	public int getMaxTechniquePoints() { return maxTechniquePoints; }
+
+	public void setMaxTechniquePoints(int mtp) {
+		maxTechniquePoints = mtp;
 	}
 	
 	public void printStatus() {

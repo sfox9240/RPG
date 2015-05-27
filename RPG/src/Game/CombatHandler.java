@@ -3,6 +3,7 @@ package Game;
 import java.util.Scanner;
 import java.util.Vector;
 import Character.Hero;
+import CombatAI.AI;
 import Enemies.Enemy;
 import Items.Intent;
 import Items.Item;
@@ -30,6 +31,8 @@ public class CombatHandler {
 	public void battleStart(Vector<Hero> heroes, Vector<Enemy> enemies) {
 		this.heroes = heroes;
 		this.enemies = enemies;
+		AI enemyAI = new AI(heroes, enemies);
+
 		//While both teams are alive
 		System.out.println("BATTLE START!");
 		while(heroesAlive() && enemiesAlive()) {
@@ -42,11 +45,11 @@ public class CombatHandler {
 				}
 			}
 			//each other enemies gets to attack
-			for (Enemy enemy : enemies) {
-				if (enemy.getHealth() > 0 && seekHero() != -1) {
-					System.out.println(enemy.getName() + "'s turn!");
+			for (int j = 0; j < enemies.size(); j++) {
+				if (enemies.get(j).getHealth() > 0 && seekHero() != -1) {
+					System.out.println(enemies.get(j).getName() + "'s turn!");
 					//Fancy AI attack algorithm
-					enemy.attack(heroes.get(seekHero())); //Attack the first enemy found to be alive
+					enemyAI.takeTurn(j); //Attack the first enemy found to be alive
 				}
 			}
 		}

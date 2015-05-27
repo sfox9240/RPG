@@ -48,12 +48,12 @@ public class main {
 		Vector<Enemy> enemies = new Vector<Enemy>();
 		
 		Guard g1 = new Guard(); enemies.add(g1);
-		Guard g2 = new Guard(); enemies.add(g2);
+		//Guard g2 = new Guard(); enemies.add(g2);
 		//Guard g3 = new Guard(); enemies.add(g3);
 		//Goblin g1 = new Goblin();
 		//Goblin g2 = new Goblin();
-		Hobgoblin h1 = new Hobgoblin();
-		
+		//Hobgoblin h1 = new Hobgoblin();
+		/*
 		Club megaclub = new Club("Wooden Club", "A club", false);
 		Lightning zap = new Lightning(new BaseAugment());
 		megaclub.setAugment(zap);
@@ -64,11 +64,11 @@ public class main {
 		enemies.add(h1);
 		//enemies.add(g2);
 
-
+*/
 		GreenHerb greenHerb = new GreenHerb();
 		RedHerb redHerb = new RedHerb();
 		Bomb bomb = new Bomb();
-
+		g1.getItems().add(greenHerb);
 		Link.getItems().add(greenHerb);
 		Zelda.getItems().add(redHerb);
 		Zelda.getItems().add(bomb);
