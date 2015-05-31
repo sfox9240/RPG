@@ -2,12 +2,10 @@ package Game;
 
 import java.util.Vector;
 
-import Augments.*;
 import Character.Hero;
 import Enemies.*;
 import FightClasses.*;
 import Items.*;
-import Skills.BigBangAttack;
 import Skills.Fireball;
 import Skills.Heal;
 import Skills.TripleStrike;
@@ -22,6 +20,7 @@ public class main {
 		CombatHandler BATTLE = new CombatHandler();
 		Hero Link = new Hero("Link", new Knight());
 		Hero Zelda = new Hero("Zelda", new Wizard());
+		Hero Ganon = new Hero("Ganon", new BanditKing());
 		
 		System.out.println("Link Health: " + Link.getHealth());
 		System.out.println("Link dmg mod: " + Link.getDamageMod());
@@ -33,22 +32,17 @@ public class main {
 
 		Link.setWeapon(woodenSword);
 		Zelda.setWeapon(woodenBow);
-		
-		Link.getWeapon().getDetails();
-		Zelda.getWeapon().getDetails();
-		
-		System.out.println("Link's combat damage is: " + Link.getCombatDmg());
-		System.out.println("Zelda's combat damage is: " + Zelda.getCombatDmg());
-
+		Ganon.setWeapon(woodenSword);
 
 		Vector<Hero> party = new Vector<Hero>();
 		party.add(Link);
 		party.add(Zelda);
+		party.add(Ganon);
 		
 		Vector<Enemy> enemies = new Vector<Enemy>();
 		
 		Guard g1 = new Guard(); enemies.add(g1);
-		//Guard g2 = new Guard(); enemies.add(g2);
+		Guard g2 = new Guard(); enemies.add(g2);
 		//Guard g3 = new Guard(); enemies.add(g3);
 		//Goblin g1 = new Goblin();
 		//Goblin g2 = new Goblin();

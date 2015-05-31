@@ -23,34 +23,51 @@ public class AI {
     public void takeTurn(int characterTurn) {
         this.characterTurn = characterTurn;
         Boolean heal = healWounded();
+        Boolean restore = true;
         if(!heal) {
+            restore = restoreTP();
+        }
+
+        if(!heal || !restore) {
             System.out.println("The AI attempts to attack.");
-            enemies.get(characterTurn).attack(heroes.get(seekHero()));
+            enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
         }
     }
-/*
-    public Boolean healWounded2() {
-        Enemy weakest = null;
-        Boolean heal = true;
 
-        for (Enemy enemy : enemies) {
-            if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && (weakest == null)) {
-                weakest = enemy;
-            } else if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && enemy.getHealth() < weakest.getHealth()) {
-                weakest = enemy;
-            } else {
-                heal = false;
+    public Boolean restoreTP() {
+        Boolean canRestore = false;
+        Enemy currentCharacter = enemies.get(characterTurn);
+        int restoreIndex = 0;
+
+        int i = 0;
+        for(Item item: currentCharacter.getItems()) {
+            if(item.getIntent() == Intent.RESTORE){
+                canRestore = true;
+                restoreIndex = i;
+            }
+            i++;
+        }
+
+        Enemy lowest = null;
+
+        if(canRestore) {
+            //Find the weakest ally
+            for (Enemy enemy : enemies) {
+                if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && (lowest == null)) {
+                    lowest = enemy;
+                } else if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && enemy.getTechniquePoints() < lowest.getTechniquePoints()) {
+                    lowest = enemy;
+                } else {
+                    //NOTHING heal = false;
+                }
+            }
+            if(lowest != null) {
+                enemies.get(characterTurn).getItems().get(restoreIndex).use(enemies.get(characterTurn), lowest); //Heal the enemy with the lowest health that is below 30% of max
+                return true;
             }
         }
-
-        Enemy currentChar = enemies.get(characterTurn);
-
-        for(Item item: currentChar.getItems()) {
-            if
-
-        }
+        return false;
     }
-    */
 
     public Boolean healWounded() {
         Boolean useItem = false;
@@ -58,7 +75,6 @@ public class AI {
         Enemy currentCharacter = enemies.get(characterTurn);
         int usageIndex = 0;
 
-        System.out.println("The AI attempts to heal");
         //First check if the character has a healing item
         int i = 0;
         for(Item item: currentCharacter.getItems()) {
@@ -80,8 +96,8 @@ public class AI {
             j++;
             }
         }
-        //TODO: Fix this
-        Enemy weakest = null; //= enemies.get(0);
+
+        Enemy weakest = null;
 
         //TODO: Change the healing algorithm to use the item that would heal the character the most, but go over their max health the least.
         if(useItem) {
@@ -122,7 +138,65 @@ public class AI {
         return false;
     }
 
-    protected int seekHero() {
+    /*
+    --Find the weakest opponent--
+    The first person found alive is "the weakest".
+    After that if the percentage of health left is lower than "the weakest", then this character is the new "the weakest"
+    return the index of the weakest
+     */
+    protected int seekWeakest() {
+
+        Hero weakest = null;
+        int weakestIndex = 0;
+
+        for (int i = 0; i < heroes.size(); i++) {
+            double currentHeroHP = heroes.get(i).getHealth();
+            double currentHeroMaxHP = heroes.get(i).getMaxHealth();
+
+            if ((currentHeroHP > 0) && (weakest == null)) {
+                weakest = heroes.get(i);
+                weakestIndex = i;
+            } else if ((currentHeroHP / currentHeroMaxHP) > 0 && (currentHeroHP / currentHeroMaxHP) < (weakest.getHealth() / weakest.getMaxHealth())) {
+                weakest = heroes.get(i);
+                weakestIndex = i;
+            } else {
+                //NOTHING
+            }
+        }
+        if (weakest != null) {
+            return weakestIndex;
+        } else {
+            return -1; //No living opponents
+        }
+    }
+
+    protected int seekStrongest() {
+
+        Hero strongest = null;
+        int strongestIndex = 0;
+
+        for (int i = 0; i < heroes.size(); i++) {
+            double currentHeroHP = heroes.get(i).getHealth();
+            // double currentHeroMaxHP = heroes.get(i).getMaxHealth();
+
+            if ((currentHeroHP > 0) && (strongest == null)) {
+                strongest = heroes.get(i);
+                strongestIndex = i;
+            } else if ((currentHeroHP > 0) && (currentHeroHP > strongest.getHealth())) {
+                strongest = heroes.get(i);
+                strongestIndex = i;
+            } else {
+                //NOTHING
+            }
+        }
+        if (strongest != null) {
+            return strongestIndex;
+        } else {
+            return -1; //No living opponents
+        }
+    }
+
+    protected int seekFirstHero() {
 
         for(int i = 0; i < heroes.size(); i++) {
             if(heroes.get(i).getHealth() > 0) {
