@@ -34,18 +34,4 @@ public abstract class Enemy extends Character {
 	public double getCombatDmg() {
 		return getDamageMod() + weapon.getDamage();
 	}
-	
-	public void attack(Character otherguy) {
-		if(hitCalculator()) {
-			//Attack lands
-			otherguy.setHealth(otherguy.getHealth() - getCombatDmg());
-			System.out.println(name + " dealt " + getCombatDmg() + " damage to " + otherguy.getName());
-			if(otherguy.getHealth() <= 0) {
-				System.out.println(otherguy.getName() + " has been felled!");
-			}
-		} else {
-			//Attack missed
-			System.out.println(name + " missed their attack!");
-		}
-	}
 }

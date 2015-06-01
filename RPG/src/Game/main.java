@@ -43,7 +43,7 @@ public class main {
 		
 		Guard g1 = new Guard(); enemies.add(g1);
 		Guard g2 = new Guard(); enemies.add(g2);
-		//Guard g3 = new Guard(); enemies.add(g3);
+		Guard g3 = new Guard(); enemies.add(g3);
 		//Goblin g1 = new Goblin();
 		//Goblin g2 = new Goblin();
 		//Hobgoblin h1 = new Hobgoblin();

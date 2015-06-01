@@ -63,6 +63,9 @@ public class CombatHandler {
 	protected void playerAction(int heroTurn) {
 		Boolean validResponse = false;
 		String action1;
+		if(heroes.get(heroTurn).getStatus() == Status.GUARDING) { //New turn, no longer guarding
+			heroes.get(heroTurn).setStatus(Status.NORMAL);
+		}
 
 		while(!validResponse) {
 			printBattleOptions();
@@ -73,10 +76,9 @@ public class CombatHandler {
 					validResponse = selectAttackTarget(heroTurn);
 					break;
 				case "2":
-					//UNDER CONSTRUCTION TODO:Implement blocking
-					System.out.println("This doesn't do anything yet...");
 					validResponse = true;
-					System.out.println("Skipping turn...");
+					heroes.get(heroTurn).setStatus(Status.GUARDING);
+					System.out.println(heroes.get(heroTurn).getName() + " is guarding!");
 					break;
 				case "3":
 					validResponse = selectItem(heroTurn);
@@ -133,10 +135,12 @@ public class CombatHandler {
 
 				int target = selectItemTarget(heroTurn, (actionVal - 1));
 				if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1));
+					//heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1));
+					heroes.get(heroTurn).useItem(heroes.get(target - 1), (actionVal- 1));
 					validResponse = true;
 				} else if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1));
+					//heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1));
+					heroes.get(heroTurn).useItem(enemies.get(target - 1), (actionVal - 1));
 					validResponse = true;
 				} else { //Cannot Equip weapon during combat
 					System.out.println("Cannot equip weapons during combat");
@@ -213,10 +217,12 @@ public class CombatHandler {
 				validItemResponse = true;
 				int target = selectSkillTarget(heroTurn, (actionVal - 1));
 				if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroes.get(heroTurn).getSkills().get((actionVal - 1)).attack(heroes.get(heroTurn), heroes.get(target - 1));
+					//heroes.get(heroTurn).getSkills().get((actionVal - 1)).attack(heroes.get(heroTurn), heroes.get(target - 1));
+					heroes.get(heroTurn).useSkill(heroes.get(target - 1), (actionVal - 1));
 					validResponse = true;
 				} else if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroes.get(heroTurn).getSkills().get((actionVal - 1)).attack(heroes.get(heroTurn), enemies.get(target - 1));
+					//heroes.get(heroTurn).getSkills().get((actionVal - 1)).attack(heroes.get(heroTurn), enemies.get(target - 1));
+					heroes.get(heroTurn).useSkill(enemies.get(target - 1), (actionVal - 1));
 					validResponse = true;
 				} else { //Cannot Equip weapon during combat
 					System.out.println("Cannot equip weapons during combat");

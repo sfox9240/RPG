@@ -1,6 +1,8 @@
 package Character;
 import java.util.Vector;
 
+import Game.Illness;
+import Game.Status;
 import Items.Item;
 import Items.Weapon;
 import FightClasses.RandomGenerator;
@@ -17,6 +19,8 @@ public abstract class Character {
 	protected Vector<Skill> skills = new Vector<Skill>();
 	protected int techniquePoints;
 	protected int maxTechniquePoints;
+	protected Illness illness = Illness.NONE;
+	protected Status status = Status.NORMAL;
 	
 	public String getName() {
 		return name;
@@ -75,12 +79,30 @@ public abstract class Character {
 	public void printStatus() {
 		System.out.println(this.name + "'s Health: " + health + ", TP: " + techniquePoints);
 	}
-	
-	public abstract void attack(Character opponent);
 
-	public void useSkill(Character opponent, int skill) {
-		skills.get(skill).attack(this, opponent);
+	public abstract double getCombatDmg();
+
+	public Illness getIllness() {
+		return illness;
 	}
+
+	public void setIllness(Illness i) {
+		illness = i;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status s) {
+		status = s;
+	}
+
+	public void useSkill(Character target, int skill) {
+		skills.get(skill).attack(this, target);
+	}
+
+	public void useItem(Character target, int item) { items.get(item).use(this, target);}
 	
 	public Boolean hitCalculator() {
 		RandomGenerator generator = new RandomGenerator();
@@ -89,6 +111,29 @@ public abstract class Character {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	public void attack(Character opponent) {
+		Boolean hit = hitCalculator();
+		if(hit) {
+			//Attack lands
+			if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
+				opponent.setHealth(opponent.getHealth() - (getCombatDmg() / 2));
+				System.out.println(opponent.getName() + " guarded against the attack!");
+				System.out.println(name + " dealt " + (getCombatDmg() / 2) + " damage to " + opponent.getName());
+			} else {
+				opponent.setHealth(opponent.getHealth() - getCombatDmg());
+				System.out.println(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
+			}
+
+			if(opponent.getHealth() <= 0) {
+				System.out.println(opponent.getName() + " has been felled!");
+				opponent.setStatus(Status.FAINTED);
+			}
+		} else {
+			//Attack missed
+			System.out.println(name + " missed their attack!");
 		}
 	}
 }

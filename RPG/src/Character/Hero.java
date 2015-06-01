@@ -1,5 +1,6 @@
 package Character;
 import FightClasses.BattleClass;
+import Game.Status;
 import Items.*;
 import Skills.DoubleStrike;
 import Skills.Fireball;
@@ -28,21 +29,5 @@ public class Hero extends Character {
 	
 	public double getCombatDmg() {
 		return getDamageMod() + weapon.getDamage();
-	}
-
-	@Override
-	public void attack(Character opponent) {
-		Boolean hit = hitCalculator();
-		if(hit) {
-			//Attack lands
-			opponent.setHealth(opponent.getHealth() - getCombatDmg());
-			System.out.println(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
-			if(opponent.getHealth() <= 0) {
-				System.out.println(opponent.getName() + " has been felled!");
-			}
-		} else {
-			//Attack missed
-			System.out.println(name + " missed their attack!");
-		}
 	}
 }

@@ -1,6 +1,7 @@
 package Skills;
 import Game.Element;
 import Character.Character;
+import Game.Status;
 import Items.Intent;
 
 /**
@@ -56,6 +57,7 @@ public abstract class Skill {
                 System.out.println(attacker.getName() + " dealt " + this.damage + " damage to " + opponent.getName());
                 if (opponent.getHealth() <= 0) {
                     System.out.println(opponent.getName() + " has been felled!");
+                    opponent.setStatus(Status.FAINTED);
                 }
             } else {
                 //Attack missed
