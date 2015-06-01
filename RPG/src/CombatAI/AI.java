@@ -1,6 +1,7 @@
 package CombatAI;
 import Character.*;
 import Enemies.Enemy;
+import FightClasses.RandomGenerator;
 import Items.Intent;
 import Items.Item;
 import Skills.Skill;
@@ -14,10 +15,12 @@ public class AI {
     protected Vector<Hero> heroes;
     protected Vector<Enemy> enemies;
     int characterTurn;
+    RandomGenerator generator;
 
     public AI(Vector<Hero> h, Vector<Enemy> e) {
         heroes = h;
         enemies = e;
+        generator = new RandomGenerator();
     }
 
     public void takeTurn(int characterTurn) {
@@ -29,8 +32,25 @@ public class AI {
         }
 
         if(!heal || !restore) {
-            System.out.println("The AI attempts to attack.");
-            enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
+            //TODO: Replace this with more logic so attacking is a little less random
+            int ATTACKTYPES = 3; //This is the total number of attack methods
+            int randomAttack = generator.getNumberBetween(1, ATTACKTYPES);
+
+            switch(randomAttack) {
+                case 1:
+                    System.out.println("The AI chooses to attack the weakest.");
+                    enemies.get(characterTurn).attack(heroes.get(seekWeakest()));
+                    break;
+                case 2:
+                    System.out.println("The AI chooses to attack the strongest.");
+                    enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
+                    break;
+                case 3:
+                    System.out.println("The AI chooses to attack the first living.");
+                    enemies.get(characterTurn).attack(heroes.get(seekFirstHero()));
+                    break;
+            }
+
         }
     }
 
@@ -141,7 +161,7 @@ public class AI {
     /*
     --Find the weakest opponent--
     The first person found alive is "the weakest".
-    After that if the percentage of health left is lower than "the weakest", then this character is the new "the weakest"
+    After that if the amount of health left is lower than "the weakest", then this character is the new "the weakest"
     return the index of the weakest
      */
     protected int seekWeakest() {
@@ -156,7 +176,7 @@ public class AI {
             if ((currentHeroHP > 0) && (weakest == null)) {
                 weakest = heroes.get(i);
                 weakestIndex = i;
-            } else if ((currentHeroHP / currentHeroMaxHP) > 0 && (currentHeroHP / currentHeroMaxHP) < (weakest.getHealth() / weakest.getMaxHealth())) {
+            } else if ((currentHeroHP  > 0) && (currentHeroHP < (weakest.getHealth()))) {
                 weakest = heroes.get(i);
                 weakestIndex = i;
             } else {
@@ -170,6 +190,12 @@ public class AI {
         }
     }
 
+    /*
+    --Find the strongest opponent--
+    The first person found alive is "the strongest".
+    After that if the amount of health left is greater than "the strongest", then this character is the new "the strongest"
+    return the index of the weakest
+     */
     protected int seekStrongest() {
 
         Hero strongest = null;
@@ -196,6 +222,9 @@ public class AI {
         }
     }
 
+    /*
+    Find the first living hero and attack them
+     */
     protected int seekFirstHero() {
 
         for(int i = 0; i < heroes.size(); i++) {

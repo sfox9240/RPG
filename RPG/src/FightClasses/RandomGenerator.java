@@ -19,15 +19,9 @@ public class RandomGenerator {
 		return generator.nextInt(3) + 2;
 	}
 	
-	public int weakEnemy() {
-		return generator.nextInt(2) + 1; 
-
+	public int getNumberBetween(int min, int max) {
+		return generator.nextInt(max - min + 1) + min;
 	}
-	
-	public int midEnemy() {
-		return  generator.nextInt(4) + 2;
-	}
-	
 	//Hit calculator 50% chance
 	public int attackRandom() {
 		return generator.nextInt(2);

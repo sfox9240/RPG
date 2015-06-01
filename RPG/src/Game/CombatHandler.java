@@ -75,6 +75,8 @@ public class CombatHandler {
 				case "2":
 					//UNDER CONSTRUCTION TODO:Implement blocking
 					System.out.println("This doesn't do anything yet...");
+					validResponse = true;
+					System.out.println("Skipping turn...");
 					break;
 				case "3":
 					validResponse = selectItem(heroTurn);
