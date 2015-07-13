@@ -1,6 +1,6 @@
 package Skills;
 import Game.Element;
-import Character.Character;
+import Actor.Actor;
 import Game.Status;
 import Items.Intent;
 
@@ -47,7 +47,7 @@ public abstract class Skill {
 
     /* TODO: Rename "attack" to "use". Also, attack should return to inform if there was enough TP to do the attack*/
 
-    public void attack(Character attacker, Character opponent) {
+    public void attack(Actor attacker, Actor opponent) {
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             Boolean hit = attacker.hitCalculator();
             System.out.println(attacker.getName() + " used " + name + "!");

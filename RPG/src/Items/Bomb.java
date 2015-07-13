@@ -1,5 +1,5 @@
 package Items;
-import Character.Character;
+import Actor.*;
 /**
  * Created by piano_000 on 5/23/2015.
  */
@@ -15,7 +15,7 @@ public class Bomb extends Item {
     }
 
     @Override
-    public void use(Character caster, Character target) {
+    public void use(Actor caster, Actor target) {
         Boolean hit = caster.hitCalculator();
         if (hit) {
             //Attack lands

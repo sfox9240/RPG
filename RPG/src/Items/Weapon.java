@@ -1,6 +1,6 @@
 package Items;
 import Augments.Augment;
-import Character.Character;
+import Actor.*;
 
 public abstract class Weapon extends Item {
 
@@ -32,7 +32,7 @@ public abstract class Weapon extends Item {
 		System.out.println(name + " is " + description + ". It does " + damage + " damage.");
 	}
 
-	public void use(Character caster, Character target) {
+	public void use(Actor caster, Actor target) {
 		System.out.println("Cannot use " + name + ".");
 	}
 }

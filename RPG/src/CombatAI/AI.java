@@ -1,6 +1,5 @@
 package CombatAI;
-import Character.*;
-import Enemies.Enemy;
+import Actor.*;
 import FightClasses.RandomGenerator;
 import Items.Intent;
 import Items.Item;
@@ -10,14 +9,16 @@ import java.util.Vector;
 
 /**
  * Created by piano_000 on 5/26/2015.
+ *
+ * TODO: Create more robust AI that can handel status effects like poison and burning
  */
 public class AI {
-    protected Vector<Hero> heroes;
-    protected Vector<Enemy> enemies;
+    protected Vector<Actor> heroes;
+    protected Vector<Actor> enemies;
     int characterTurn;
     RandomGenerator generator;
 
-    public AI(Vector<Hero> h, Vector<Enemy> e) {
+    public AI(Vector<Actor> h, Vector<Actor> e) {
         heroes = h;
         enemies = e;
         generator = new RandomGenerator();
@@ -54,9 +55,12 @@ public class AI {
         }
     }
 
+    /*
+    Find an ally that has less than 30% of their maximum tp. If there is an ally and a restore item exists, restore that ally's tp.
+     */
     public Boolean restoreTP() {
         Boolean canRestore = false;
-        Enemy currentCharacter = enemies.get(characterTurn);
+        Actor currentCharacter = enemies.get(characterTurn);
         int restoreIndex = 0;
 
         int i = 0;
@@ -68,21 +72,21 @@ public class AI {
             i++;
         }
 
-        Enemy lowest = null;
+        Actor lowest = null;
 
         if(canRestore) {
             //Find the weakest ally
-            for (Enemy enemy : enemies) {
+            for (Actor enemy : enemies) {
                 if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && (lowest == null)) {
                     lowest = enemy;
                 } else if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && enemy.getTechniquePoints() < lowest.getTechniquePoints()) {
                     lowest = enemy;
                 } else {
-                    //NOTHING heal = false;
+                    //NOTHING
                 }
             }
             if(lowest != null) {
-                enemies.get(characterTurn).getItems().get(restoreIndex).use(enemies.get(characterTurn), lowest); //Heal the enemy with the lowest health that is below 30% of max
+                enemies.get(characterTurn).getItems().get(restoreIndex).use(enemies.get(characterTurn), lowest); //Restore the enemy with the lowest tp that is below 30% of max
                 return true;
             }
         }
@@ -92,7 +96,7 @@ public class AI {
     public Boolean healWounded() {
         Boolean useItem = false;
         Boolean useSkill = false;
-        Enemy currentCharacter = enemies.get(characterTurn);
+        Actor currentCharacter = enemies.get(characterTurn);
         int usageIndex = 0;
 
         //First check if the character has a healing item
@@ -117,12 +121,12 @@ public class AI {
             }
         }
 
-        Enemy weakest = null;
+        Actor weakest = null;
 
         //TODO: Change the healing algorithm to use the item that would heal the character the most, but go over their max health the least.
         if(useItem) {
             //Find the weakest ally
-            for (Enemy enemy : enemies) {
+            for (Actor enemy : enemies) {
                 if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && (weakest == null)) {
                     weakest = enemy;
                 } else if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && enemy.getHealth() < weakest.getHealth()) {
@@ -139,7 +143,7 @@ public class AI {
 
         if(useSkill) {
             //Find the weakest ally
-            for (Enemy enemy : enemies) {
+            for (Actor enemy : enemies) {
                 if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && (weakest == null)) {
                     weakest = enemy;
                 } else if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && enemy.getHealth() < weakest.getHealth()) {
@@ -166,7 +170,7 @@ public class AI {
      */
     protected int seekWeakest() {
 
-        Hero weakest = null;
+        Actor weakest = null;
         int weakestIndex = 0;
 
         for (int i = 0; i < heroes.size(); i++) {
@@ -198,7 +202,7 @@ public class AI {
      */
     protected int seekStrongest() {
 
-        Hero strongest = null;
+        Actor strongest = null;
         int strongestIndex = 0;
 
         for (int i = 0; i < heroes.size(); i++) {

@@ -1,7 +1,8 @@
 package Skills;
 
+import Actor.Actor;
 import Items.Intent;
-import Character.Character;
+import Actor.*;
 /**
  * Created by piano_000 on 5/24/2015.
  */
@@ -16,7 +17,7 @@ public class Heal extends Skill {
         this.intent = Intent.HEAL;
     }
 
-    public void attack(Character attacker, Character opponent) {
+    public void attack(Actor attacker, Actor opponent) {
         if ((attacker.getTechniquePoints() - TPCost) >= 0) {
 
             System.out.println(attacker.getName() + " used " + name + "!");

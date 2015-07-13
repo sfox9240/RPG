@@ -1,5 +1,5 @@
 package Skills;
-import Character.Character;
+import Actor.Actor;
 import Items.Intent;
 
 /**
@@ -20,7 +20,7 @@ public class DoubleStrike extends Skill {
      * Allows the character to perform two attacks, back to back
      */
     @Override
-    public void attack(Character attacker, Character opponent) {
+    public void attack(Actor attacker, Actor opponent) {
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             System.out.println(attacker.getName() + " used " + name + "!");
             //First Attack

@@ -1,9 +1,10 @@
-package Enemies;
+package Actor;
+import Actor.*;
 import Items.*;
 
 import java.util.Vector;
 
-public class Guard extends Enemy{
+public class Guard extends Actor {
 
 	public Guard() {
 		this.name = "Guard";

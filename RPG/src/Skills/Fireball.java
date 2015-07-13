@@ -1,5 +1,4 @@
 package Skills;
-import Character.Character;
 import Items.Intent;
 
 /**

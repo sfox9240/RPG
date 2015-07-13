@@ -1,5 +1,5 @@
 package Skills;
-import Character.Character;
+import Actor.Actor;
 import Items.Intent;
 
 /**
@@ -17,7 +17,7 @@ public class TripleStrike extends Skill {
     }
 
     @Override
-    public void attack(Character attacker, Character opponent) {
+    public void attack(Actor attacker, Actor opponent) {
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             System.out.println(attacker.getName() + " used " + name + "!");
 

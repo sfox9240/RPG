@@ -1,11 +1,8 @@
-package Character;
+package Actor;
 import FightClasses.BattleClass;
-import Game.Status;
 import Items.*;
-import Skills.DoubleStrike;
-import Skills.Fireball;
 
-public class Hero extends Character {
+public class Hero extends Actor {
 	protected BattleClass fightclass;
 	
 	public Hero(String name, BattleClass type) {

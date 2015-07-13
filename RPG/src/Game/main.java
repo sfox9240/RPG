@@ -2,8 +2,7 @@ package Game;
 
 import java.util.Vector;
 
-import Character.Hero;
-import Enemies.*;
+import Actor.*;
 import FightClasses.*;
 import Items.*;
 import Skills.Fireball;
@@ -34,16 +33,17 @@ public class main {
 		Zelda.setWeapon(woodenBow);
 		Ganon.setWeapon(woodenSword);
 
-		Vector<Hero> party = new Vector<Hero>();
+		Vector<Actor> party = new Vector<>();
 		party.add(Link);
 		party.add(Zelda);
 		party.add(Ganon);
 		
-		Vector<Enemy> enemies = new Vector<Enemy>();
-		
+		Vector<Actor> enemies = new Vector<>();
+
 		Guard g1 = new Guard(); enemies.add(g1);
 		Guard g2 = new Guard(); enemies.add(g2);
 		Guard g3 = new Guard(); enemies.add(g3);
+
 		//Goblin g1 = new Goblin();
 		//Goblin g2 = new Goblin();
 		//Hobgoblin h1 = new Hobgoblin();

@@ -1,7 +1,8 @@
-package Enemies;
+package Actor;
 import Items.*;
+import Actor.*;
 
-public class Goblin extends Enemy {
+public class Goblin extends Actor {
 
 	public Goblin() {
 		this.name = "Goblin";

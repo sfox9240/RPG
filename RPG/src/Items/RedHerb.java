@@ -1,5 +1,5 @@
 package Items;
-import Character.Character;
+import Actor.*;
 /**
  * Created by piano_000 on 5/22/2015.
  */
@@ -18,7 +18,7 @@ public class RedHerb extends Item {
      Only works on non-dead party members
      */
     @Override
-    public void use(Character caster, Character target) {
+    public void use(Actor caster, Actor target) {
         if(target.getHealth() > 0) {
             target.setHealth(target.getHealth() + heal);
             System.out.println(target.getName() + " was healed for " + heal + " HP");

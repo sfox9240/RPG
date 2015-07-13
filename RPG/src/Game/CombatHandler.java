@@ -2,9 +2,9 @@ package Game;
 
 import java.util.Scanner;
 import java.util.Vector;
-import Character.Hero;
+import Actor.*;
 import CombatAI.AI;
-import Enemies.Enemy;
+import FightClasses.RandomGenerator;
 import Items.Intent;
 import Items.Item;
 import Skills.Skill;
@@ -19,8 +19,8 @@ public class CombatHandler {
 
 	private Scanner readAction = new Scanner(System.in);
 	//TODO: Make heroes and enemies shared variables and create a clean up method to clean the class after a battle
-	protected Vector<Hero> heroes = null;
-	protected Vector<Enemy> enemies = null;
+	protected Vector<Actor> heroes = null;
+	protected Vector<Actor> enemies = null;
 
 	public CombatHandler() {}
 
@@ -28,7 +28,7 @@ public class CombatHandler {
 	BattleStart manages turn order of the encounter the enemy AI and the player commands control
 	what each party chooses to do during each of those turns
 	 */
-	public void battleStart(Vector<Hero> heroes, Vector<Enemy> enemies) {
+	public void battleStart(Vector<Actor> heroes, Vector<Actor> enemies) {
 		this.heroes = heroes;
 		this.enemies = enemies;
 		AI enemyAI = new AI(heroes, enemies);
@@ -73,7 +73,7 @@ public class CombatHandler {
 
 			switch (action1) {
 				case "1": //Attack
-					validResponse = selectAttackTarget(heroTurn);
+					validResponse = basicAttack(heroTurn);
 					break;
 				case "2":
 					validResponse = true;
@@ -92,6 +92,78 @@ public class CombatHandler {
 		}
 	}
 
+	/*
+	Do a basic attack for a character against a character
+	 */
+	protected Boolean basicAttack(int heroTurn) {
+		int target = selectTarget();
+
+		if(target <= -1) {
+			return false;
+		}
+
+		Actor attacker = heroes.get(heroTurn);
+		Actor opponent = enemies.get(target);
+
+		Boolean hit = hitCalculator();
+		if(hit) {
+			//Attack lands
+			if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
+				opponent.setHealth(opponent.getHealth() - (attacker.getCombatDmg() / 2));
+				System.out.println(opponent.getName() + " guarded against the attack!");
+				System.out.println(attacker.getName() + " dealt " + (attacker.getCombatDmg() / 2) + " damage to " + opponent.getName());
+			} else {
+				opponent.setHealth(opponent.getHealth() - attacker.getCombatDmg());
+				System.out.println(attacker.getName() + " dealt " + attacker.getCombatDmg() + " damage to " + opponent.getName());
+			}
+
+			if(opponent.getHealth() <= 0) {
+				System.out.println(opponent.getName() + " has been felled!");
+				opponent.setStatus(Status.FAINTED);
+			}
+		} else {
+			//Attack missed
+			System.out.println(attacker.getName() + " missed their attack!");
+		}
+		return true;
+	}
+
+	public Boolean hitCalculator() {
+		RandomGenerator generator = new RandomGenerator();
+		int hit = generator.attackRandom();
+		if(hit == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+	Select a target from enemies
+	Success: returns the value of the enemy in the enemies vector
+	Cancel: returns -1
+	Failure: returns -2
+
+	 */
+	protected int selectTarget() {
+		printEnemies();
+		String action;
+		Boolean validAttackResponse = false;
+		while(!validAttackResponse) {
+			action = readAction.nextLine();
+			int action2val = Integer.parseInt(action);
+
+			if(action2val <= enemies.size() && action2val > 0) {
+				return (action2val - 1);
+			}
+
+			//Back command
+			if((action2val) == 0) {
+				validAttackResponse = true;
+			}
+		}
+		return -2; // Error
+	}
 	/*
 	TODO: Add actual error handling
 	 */
@@ -239,7 +311,7 @@ public class CombatHandler {
 
 	/*
 	Helper function for selectItem
-	Determines which type of character the selected item can be used on and outputs the relative character list
+	Determines which type of character the selected item can be u,sed on and outputs the relative character list
 	and returns the index of the target
 	 */
 	protected int selectSkillTarget(int heroTurn, int skillIndex) {
@@ -324,7 +396,7 @@ public class CombatHandler {
 	}
 
 	/*
-	 * Find a way to standardize these methods so they work for both Heroes and Enemies
+	 * TODO: Find a way to standardize these methods so they work for both Heroes and Enemies
 	 */
 	
 	/*

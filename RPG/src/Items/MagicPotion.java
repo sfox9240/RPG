@@ -1,6 +1,5 @@
 package Items;
-import Character.Character;
-
+import Actor.*;
 /**
  * Created by piano_000 on 5/29/2015.
  */
@@ -16,7 +15,7 @@ public class MagicPotion extends Item {
     }
 
     @Override
-    public void use(Character caster, Character target) {
+    public void use(Actor caster, Actor target) {
         if(target.getHealth() > 0) {
             target.setTechniquePoints(target.getTechniquePoints() + restore);
             System.out.println(target.getName() + " restored " + restore + " TP");

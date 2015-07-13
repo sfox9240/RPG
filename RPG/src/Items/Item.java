@@ -1,5 +1,5 @@
 package Items;
-import Character.Character;
+import Actor.*;
 
 public abstract class Item {
 
@@ -17,5 +17,5 @@ public abstract class Item {
 
 	public Intent getIntent() { return intent;}
 
-	public abstract void use(Character caster, Character target);
+	public abstract void use(Actor caster, Actor target);
 }
