@@ -108,12 +108,6 @@ public abstract class Actor {
         status = s;
     }
 
-    public void useSkill(Actor target, int skill) {
-        skills.get(skill).attack(this, target);
-    }
-
-    public void useItem(Actor target, int item) { items.get(item).use(this, target);}
-
     public Boolean hitCalculator() {
         RandomGenerator generator = new RandomGenerator();
         int hit = generator.attackRandom();
@@ -124,13 +118,15 @@ public abstract class Actor {
         }
     }
 
-    public void attack(Actor opponent) {
+    public double attack(Actor opponent) {
         Boolean hit = hitCalculator();
+        double threatBuilt = 0;
         if(hit) {
             //Attack lands
             if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
                 opponent.setHealth(opponent.getHealth() - (getCombatDmg() / 2));
-                System.out.println(opponent.getName() + " guarded against the attack!");
+                threatBuilt = (getCombatDmg() / 2);
+                System.out.println(opponent.getName() + " guarded against the use!");
                 System.out.println(name + " dealt " + (getCombatDmg() / 2) + " damage to " + opponent.getName());
             } else {
                 opponent.setHealth(opponent.getHealth() - getCombatDmg());
@@ -143,7 +139,8 @@ public abstract class Actor {
             }
         } else {
             //Attack missed
-            System.out.println(name + " missed their attack!");
+            System.out.println(name + " missed their use!");
         }
+        return threatBuilt;
     }
 }

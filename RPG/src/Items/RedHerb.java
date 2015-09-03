@@ -9,7 +9,7 @@ public class RedHerb extends Item {
 
     public RedHerb() {
         name = "Red Herb";
-        description = "A natural herb that heals 20 HP";
+        description = "A natural herb that heals 40 HP";
         heal = 40;
         this.intent = Intent.HEAL;
     }

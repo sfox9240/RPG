@@ -27,7 +27,7 @@ public class Bomb extends Item {
             }
         } else {
             //Attack missed
-            System.out.println(caster.getName() + " missed their attack!");
+            System.out.println(caster.getName() + " missed their use!");
         }
         caster.getItems().remove(this);
     }

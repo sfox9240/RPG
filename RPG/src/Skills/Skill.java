@@ -40,14 +40,15 @@ public abstract class Skill {
     }
 
     /*
-     * General attack type for single hit techniques
+     * General use type for single hit techniques
      * Check if the technique will lower TP below zero, if not then do
      * the technique.
      */
 
-    /* TODO: Rename "attack" to "use". Also, attack should return to inform if there was enough TP to do the attack*/
+    /* TODO: Rename "use" to "use". Also, use should return to inform if there was enough TP to do the use*/
 
-    public void attack(Actor attacker, Actor opponent) {
+    public double use(Actor attacker, Actor opponent) {
+        double threatBuilt = 0;
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             Boolean hit = attacker.hitCalculator();
             System.out.println(attacker.getName() + " used " + name + "!");
@@ -55,6 +56,7 @@ public abstract class Skill {
                 //Attack lands
                 opponent.setHealth(opponent.getHealth() - this.damage);
                 System.out.println(attacker.getName() + " dealt " + this.damage + " damage to " + opponent.getName());
+                threatBuilt = this.damage;
                 if (opponent.getHealth() <= 0) {
                     System.out.println(opponent.getName() + " has been felled!");
                     opponent.setStatus(Status.FAINTED);
@@ -67,5 +69,6 @@ public abstract class Skill {
         } else {
             System.out.println("Not enough TP!");
         }
+        return threatBuilt;
     }
 }

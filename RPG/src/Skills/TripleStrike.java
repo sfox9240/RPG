@@ -17,27 +17,28 @@ public class TripleStrike extends Skill {
     }
 
     @Override
-    public void attack(Actor attacker, Actor opponent) {
+    public double use(Actor attacker, Actor opponent) {
+        double threatBuilt = 0;
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             System.out.println(attacker.getName() + " used " + name + "!");
 
             //First Attack
             if(attacker.hitCalculator()) {
-                attacker.attack(opponent);
+                threatBuilt = attacker.attack(opponent);
             } else {
                 System.out.println(attacker.getName() + " missed their attack!");
             }
 
             //Second Attack
-            if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second attack
-                attacker.attack(opponent);
+            if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second use
+                threatBuilt = threatBuilt + attacker.attack(opponent);
             } else {
                 System.out.println(attacker.getName() + " missed their attack!");
             }
 
             //Third Attack
-            if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second attack
-                attacker.attack(opponent);
+            if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second use
+                threatBuilt = threatBuilt + attacker.attack(opponent);
             } else {
                 System.out.println(attacker.getName() + " missed their attack!");
             }
@@ -46,5 +47,6 @@ public class TripleStrike extends Skill {
         } else {
             System.out.println("Not enough TP!");
         }
+        return threatBuilt;
     }
 }

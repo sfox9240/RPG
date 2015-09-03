@@ -83,10 +83,10 @@ public class main {
 		/*System.out.println("BATTLE START!");
 		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
 
-			Zelda.attack(Link);
+			Zelda.use(Link);
 			Zelda.printStatus();
 			Link.printStatus();
-			Link.attack(Zelda);
+			Link.use(Zelda);
 			Zelda.printStatus();
 			if(Zelda.getHealth() < 10 && Zelda.getItems().contains(redHerb)) {
 				Zelda.getItems().get(0).use(Zelda, Zelda);

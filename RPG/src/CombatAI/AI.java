@@ -24,7 +24,7 @@ public class AI {
         generator = new RandomGenerator();
     }
 
-    public void takeTurn(int characterTurn) {
+    public void takeTurn(int characterTurn, int greatestThreat) {
         this.characterTurn = characterTurn;
         Boolean heal = healWounded();
         Boolean restore = true;
@@ -34,22 +34,25 @@ public class AI {
 
         if(!heal || !restore) {
             //TODO: Replace this with more logic so attacking is a little less random
-            int ATTACKTYPES = 3; //This is the total number of attack methods
-            int randomAttack = generator.getNumberBetween(1, ATTACKTYPES);
+            int ATTACKTYPES = 3; //This is the total number of use methods
+            int randomAttack = 4;//generator.getNumberBetween(1, ATTACKTYPES);
 
             switch(randomAttack) {
                 case 1:
-                    System.out.println("The AI chooses to attack the weakest.");
+                    System.out.println("The AI chooses to use the weakest.");
                     enemies.get(characterTurn).attack(heroes.get(seekWeakest()));
                     break;
                 case 2:
-                    System.out.println("The AI chooses to attack the strongest.");
+                    System.out.println("The AI chooses to use the strongest.");
                     enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
                     break;
                 case 3:
-                    System.out.println("The AI chooses to attack the first living.");
+                    System.out.println("The AI chooses to use the first living.");
                     enemies.get(characterTurn).attack(heroes.get(seekFirstHero()));
                     break;
+                case 4:
+                    System.out.println("The AI Chooses to attack the biggest threat.");
+                    enemies.get(characterTurn).attack(heroes.get(greatestThreat));
             }
 
         }
@@ -154,7 +157,7 @@ public class AI {
             }
 
             if(weakest != null) {
-                enemies.get(characterTurn).getSkills().get(usageIndex).attack(enemies.get(characterTurn), weakest); //Heal the enemy with the lowest health that is below 30% of max
+                enemies.get(characterTurn).getSkills().get(usageIndex).use(enemies.get(characterTurn), weakest); //Heal the enemy with the lowest health that is below 30% of max
                 return true;
             }
 
@@ -227,7 +230,7 @@ public class AI {
     }
 
     /*
-    Find the first living hero and attack them
+    Find the first living hero and use them
      */
     protected int seekFirstHero() {
 

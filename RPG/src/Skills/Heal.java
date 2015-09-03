@@ -17,16 +17,18 @@ public class Heal extends Skill {
         this.intent = Intent.HEAL;
     }
 
-    public void attack(Actor attacker, Actor opponent) {
+    public double use(Actor attacker, Actor opponent) {
+        double threatBuilt = 0;
         if ((attacker.getTechniquePoints() - TPCost) >= 0) {
 
             System.out.println(attacker.getName() + " used " + name + "!");
             opponent.setHealth(opponent.getHealth() + damage);
             System.out.println(attacker.getName() + " healed " + opponent.getName() + " damage to " + damage);
-
+            threatBuilt = this.damage;
             attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
         } else {
             System.out.println("Not enough TP!");
         }
+        return threatBuilt;
     }
 }
