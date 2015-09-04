@@ -29,7 +29,7 @@ public class ThreatAnalyzer {
         }
     }
 
-    protected void addThreat(int source, double amount) {
+    public void addThreat(int source, double amount) {
         threats.get(source).add(amount);
     }
 
@@ -40,36 +40,22 @@ public class ThreatAnalyzer {
 
     }
 
-    protected void determineThreat() {
+    public void determineThreat() {
         double currentThreat = 0;
         for(int i = 0; i < threats.size(); i++) {
-            System.out.println("threater: " + threats.get(i));
-
             for(int j = 0; j < threats.get(i).size(); j++) {
                 currentThreat = currentThreat + threats.get(i).get(j);
-                System.out.println("current threat: " + threats.get(i).get(j));
                 if(currentThreat >= greatestThreat) {
                     greatestThreat = currentThreat;
                     greatestSource = i;
                 }
             }
-            System.out.println("max threat: " + greatestThreat);
             currentThreat = 0;
         }
-        System.out.println("greatest threat: " + greatestSource);
         cleanVec();
     }
 
-    protected int getGreatestSource() {
+    public int getGreatestSource() {
         return greatestSource;
     }
 }
-
-/*
-0 : 8
-1 : 2
-1 : 4
-1 : 4
-2 : 6
-2 : 6
- */

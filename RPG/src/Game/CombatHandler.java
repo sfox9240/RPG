@@ -92,6 +92,9 @@ public class CombatHandler {
 					break;
 				case "5":
 					//TODO: Implement Run
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -109,7 +112,7 @@ public class CombatHandler {
 		Actor attacker = heroes.get(heroTurn);
 		Actor opponent = enemies.get(target);
 
-		Boolean hit = hitCalculator();
+		Boolean hit = attacker.hitCalculator();
 		if(hit) {
 			//Attack lands
 			if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
@@ -132,16 +135,6 @@ public class CombatHandler {
 			System.out.println(attacker.getName() + " missed their attack!");
 		}
 		return true;
-	}
-
-	public Boolean hitCalculator() {
-		RandomGenerator generator = new RandomGenerator();
-		int hit = generator.attackRandom();
-		if(hit == 1) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	/*

@@ -17,6 +17,9 @@ public class Heal extends Skill {
         this.intent = Intent.HEAL;
     }
 
+    /*
+    You cannot miss a heal
+     */
     public double use(Actor attacker, Actor opponent) {
         double threatBuilt = 0;
         if ((attacker.getTechniquePoints() - TPCost) >= 0) {

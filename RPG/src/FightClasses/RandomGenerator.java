@@ -1,10 +1,9 @@
 package FightClasses;
 import java.util.Random;
 
-
 public class RandomGenerator {
 
-	Random generator;
+	protected Random generator;
 	
 	public RandomGenerator() {
 		generator = new Random();
@@ -21,9 +20,5 @@ public class RandomGenerator {
 	
 	public int getNumberBetween(int min, int max) {
 		return generator.nextInt(max - min + 1) + min;
-	}
-	//Hit calculator 50% chance
-	public int attackRandom() {
-		return generator.nextInt(2);
 	}
 }

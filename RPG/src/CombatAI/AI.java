@@ -34,8 +34,8 @@ public class AI {
 
         if(!heal || !restore) {
             //TODO: Replace this with more logic so attacking is a little less random
-            int ATTACKTYPES = 3; //This is the total number of use methods
-            int randomAttack = 4;//generator.getNumberBetween(1, ATTACKTYPES);
+            int ATTACKTYPES = 4; //This is the total number of use methods
+            int randomAttack = generator.getNumberBetween(1, ATTACKTYPES);
 
             switch(randomAttack) {
                 case 1:

@@ -110,8 +110,8 @@ public abstract class Actor {
 
     public Boolean hitCalculator() {
         RandomGenerator generator = new RandomGenerator();
-        int hit = generator.attackRandom();
-        if(hit == 1) {
+        int hit = generator.getNumberBetween(0, 9);
+        if(hit < 8) {
             return true;
         } else {
             return false;
@@ -128,8 +128,9 @@ public abstract class Actor {
                 threatBuilt = (getCombatDmg() / 2);
                 System.out.println(opponent.getName() + " guarded against the use!");
                 System.out.println(name + " dealt " + (getCombatDmg() / 2) + " damage to " + opponent.getName());
-            } else {
+            } else { // Normal Atatck
                 opponent.setHealth(opponent.getHealth() - getCombatDmg());
+                threatBuilt = getCombatDmg();
                 System.out.println(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
             }
 
@@ -139,7 +140,7 @@ public abstract class Actor {
             }
         } else {
             //Attack missed
-            System.out.println(name + " missed their use!");
+            System.out.println(name + " missed their attack!");
         }
         return threatBuilt;
     }

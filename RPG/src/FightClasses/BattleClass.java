@@ -8,6 +8,8 @@ public abstract class BattleClass {
 	protected int damageMod;
 	protected Skill skill;
 	protected int techniquePoints;
+
+	public String getClassName() {return className;}
 	
 	public double getHealth() {
 		return health;
