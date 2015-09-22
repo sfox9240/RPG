@@ -1,34 +1,40 @@
 package Items;
 import Actor.*;
+import Game.TextHandler;
+
+import java.awt.*;
+import java.util.Vector;
+
 /**
  * Created by piano_000 on 5/23/2015.
  */
 public class Bomb extends Item {
 
-    protected int damage;
+    protected TextHandler out = TextHandler.getInstance();
 
     public Bomb() {
         name = "Bomb";
         description = "A small throwable bomb.";
-        damage = 25;
+        value = 25;
         intent = Intent.HARM;
     }
-
+/*
     @Override
-    public void use(Actor caster, Actor target) {
+    public void use(Actor caster, Vector<Actor> opponents, int target) {
         Boolean hit = caster.hitCalculator();
+        Actor opponent = opponents.get(target);
         if (hit) {
             //Attack lands
-            System.out.println(caster.getName() + " used " + name + "!");
-            target.setHealth(target.getHealth() - damage);
-            System.out.println(caster.getName() + " dealt " + damage + " damage to " + target.getName());
-            if (target.getHealth() <= 0) {
-                System.out.println(target.getName() + " has been felled!");
+            out.printToConsole(caster.getName() + " used " + name + "!");
+            opponent.subHealth(value);
+            out.printToConsole(caster.getName() + " dealt " + value + " damage to " + opponent.getName());
+            if (opponent.getHealth() <= 0) {
+                out.printToConsole(opponent.getName() + " has been felled!");
             }
         } else {
             //Attack missed
-            System.out.println(caster.getName() + " missed their use!");
+            out.printToConsole(caster.getName() + " missed their use!");
         }
         caster.getItems().remove(this);
-    }
+    } */
 }

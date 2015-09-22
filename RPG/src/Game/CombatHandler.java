@@ -23,7 +23,10 @@ public class CombatHandler {
 	protected Vector<Actor> enemies = null;
 	protected ThreatAnalyzer heroThreat = null;
 
-	public CombatHandler() {}
+	public CombatHandler() {
+		TextHandler out = TextHandler.getInstance();
+		System.out.println("Handler from CH: " + System.identityHashCode(out));
+	}
 
 	/*
 	BattleStart manages turn order of the encounter the enemy AI and the player commands control
@@ -182,11 +185,11 @@ public class CombatHandler {
 
 				int target = selectItemTarget(heroTurn, (actionVal - 1));
 				if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1));
+					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1));
 					//heroes.get(heroTurn).useItem(heroes.get(target - 1), (actionVal- 1));
 					validResponse = true;
 				} else if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1));
+					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1));
 					//heroes.get(heroTurn).useItem(enemies.get(target - 1), (actionVal - 1));
 					validResponse = true;
 				} else { //Cannot Equip weapon during combat
@@ -261,11 +264,11 @@ public class CombatHandler {
 				validItemResponse = true;
 				int target = selectSkillTarget(heroTurn, (actionVal - 1));
 				if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1)));
+					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1)));
 					//System.out.println("result: " + heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1)));
 					validResponse = true;
 				} else if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1)));
+					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1)));
 					//System.out.println("result: " + heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1)));
 					validResponse = true;
 				} else { //Cannot Equip weapon during combat
@@ -279,7 +282,6 @@ public class CombatHandler {
 			}
 		}
 		return validResponse;
-
 	}
 
 	/*

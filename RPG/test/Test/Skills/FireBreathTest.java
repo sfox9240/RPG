@@ -1,23 +1,25 @@
 package Test.Skills;
-import Actor.Actor;
-import Actor.Hero;
+
+import Actor.*;
 import FightClasses.Knight;
 import FightClasses.Wizard;
 import Items.Sword;
 import Skills.DoubleStrike;
-import org.junit.*;
+import Skills.FireBreath;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Vector;
 
 /**
- * Created by piano_000 on 9/4/2015.
+ * Created by piano_000 on 9/21/2015.
  */
-public class DoubleStrikeTest {
+public class FireBreathTest {
 
     @Test
     public void TestInit(){
-        DoubleStrike ds = new DoubleStrike();
-        Assert.assertNotNull(ds);
+        FireBreath fb = new FireBreath();
+        Assert.assertNotNull(fb);
     }
 
     @Test
@@ -31,7 +33,11 @@ public class DoubleStrikeTest {
         party.add(Link);
         party.add(Zelda);
 
-        double threatcount = Link.getSkills().get(0).use(Link, party, 1);
-        Assert.assertNotNull(threatcount);
+        Dragon dragon = new Dragon();
+        FireBreath fb = new FireBreath();
+        dragon.addSkill(fb);
+
+        double threatcount = dragon.getSkills().get(0).use(dragon, party, 0);
+        Assert.assertEquals(threatcount, (fb.getDamage() * 2), 0);
     }
 }

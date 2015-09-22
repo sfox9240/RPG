@@ -5,9 +5,7 @@ import java.util.Vector;
 import Actor.*;
 import FightClasses.*;
 import Items.*;
-import Skills.Fireball;
-import Skills.Heal;
-import Skills.TripleStrike;
+import Skills.*;
 
 public class main {
 
@@ -17,14 +15,17 @@ public class main {
 		 */
 		
 		CombatHandler BATTLE = new CombatHandler();
+		TextHandler out = TextHandler.getInstance();
+
+		out.printToConsole("Text Handler from Main: " + System.identityHashCode(out));
 		Hero Link = new Hero("Link", new Knight());
 		Hero Zelda = new Hero("Zelda", new Wizard());
 		Hero Ganon = new Hero("Ganon", new BanditKing());
 		
-		System.out.println("Link Health: " + Link.getHealth());
-		System.out.println("Link dmg mod: " + Link.getDamageMod());
-		System.out.println("Zelda Health: " + Zelda.getHealth());
-		System.out.println("Zelda dmg mod: " + Zelda.getDamageMod());
+		out.printToConsole("Link Health: " + Link.getHealth());
+		out.printToConsole("Link dmg mod: " + Link.getDamageMod());
+		out.printToConsole("Zelda Health: " + Zelda.getHealth());
+		out.printToConsole("Zelda dmg mod: " + Zelda.getDamageMod());
 		
 		Sword woodenSword = new Sword("Wooden Sword", "Just a sword made of wood", false);
 		Bow woodenBow = new Bow("Wooden Bow", "A nice wooden bow", true);
@@ -32,6 +33,8 @@ public class main {
 		Link.setWeapon(woodenSword);
 		Zelda.setWeapon(woodenBow);
 		Ganon.setWeapon(woodenSword);
+
+		Link.addSkill(new FireBreath());
 
 		Vector<Actor> party = new Vector<>();
 		party.add(Link);
@@ -67,20 +70,22 @@ public class main {
 		Zelda.getItems().add(redHerb);
 		Zelda.getItems().add(bomb);
 
-		System.out.println("LINK INV:");
+		out.printToConsole("LINK INV:");
 		Link.printInventory();
-		System.out.println("ZELDA INV:");
+		out.printToConsole("ZELDA INV:");
 		Zelda.printInventory();
 
 		TripleStrike ts = new TripleStrike();
 		Heal heals = new Heal();
 		Fireball fb = new Fireball();
-		Link.getSkills().add(ts);
-		Link.getSkills().add(fb);
-		Zelda.getSkills().add(heals);
+		Link.addSkill(ts);
+		Link.addSkill(fb);
+		Zelda.addSkill(heals);
+		WeakHealAll wha = new WeakHealAll();
+		Zelda.addSkill(wha);
 
 		BATTLE.battleStart(party, enemies);
-		/*System.out.println("BATTLE START!");
+		/*out.printToConsole("BATTLE START!");
 		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
 
 			Zelda.use(Link);

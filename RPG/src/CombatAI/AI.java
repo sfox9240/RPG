@@ -1,6 +1,7 @@
 package CombatAI;
 import Actor.*;
 import FightClasses.RandomGenerator;
+import Game.TextHandler;
 import Items.Intent;
 import Items.Item;
 import Skills.Skill;
@@ -15,8 +16,11 @@ import java.util.Vector;
 public class AI {
     protected Vector<Actor> heroes;
     protected Vector<Actor> enemies;
-    int characterTurn;
+    protected int characterTurn;
     RandomGenerator generator;
+    protected TextHandler out = TextHandler.getInstance();
+
+    double LOW = .30;
 
     public AI(Vector<Actor> h, Vector<Actor> e) {
         heroes = h;
@@ -39,19 +43,19 @@ public class AI {
 
             switch(randomAttack) {
                 case 1:
-                    System.out.println("The AI chooses to use the weakest.");
+                    out.printToConsole("The AI chooses to use the weakest.");
                     enemies.get(characterTurn).attack(heroes.get(seekWeakest()));
                     break;
                 case 2:
-                    System.out.println("The AI chooses to use the strongest.");
+                    out.printToConsole("The AI chooses to use the strongest.");
                     enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
                     break;
                 case 3:
-                    System.out.println("The AI chooses to use the first living.");
+                    out.printToConsole("The AI chooses to use the first living.");
                     enemies.get(characterTurn).attack(heroes.get(seekFirstHero()));
                     break;
                 case 4:
-                    System.out.println("The AI Chooses to attack the biggest threat.");
+                    out.printToConsole("The AI Chooses to attack the biggest threat.");
                     enemies.get(characterTurn).attack(heroes.get(greatestThreat));
             }
 
@@ -75,21 +79,10 @@ public class AI {
             i++;
         }
 
-        Actor lowest = null;
-
+        int target = getLowTPAlly();
         if(canRestore) {
-            //Find the weakest ally
-            for (Actor enemy : enemies) {
-                if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && (lowest == null)) {
-                    lowest = enemy;
-                } else if (enemy.getTechniquePoints() < (enemy.getMaxTechniquePoints() * .30) && enemy.getTechniquePoints() < lowest.getTechniquePoints()) {
-                    lowest = enemy;
-                } else {
-                    //NOTHING
-                }
-            }
-            if(lowest != null) {
-                enemies.get(characterTurn).getItems().get(restoreIndex).use(enemies.get(characterTurn), lowest); //Restore the enemy with the lowest tp that is below 30% of max
+            if(target != -1) {
+                enemies.get(characterTurn).getItems().get(restoreIndex).use(enemies.get(characterTurn), enemies, target); //Restore the enemy with the lowest tp that is below 30% of max
                 return true;
             }
         }
@@ -124,45 +117,80 @@ public class AI {
             }
         }
 
-        Actor weakest = null;
+        int target = getWeakestAlly();;
 
         //TODO: Change the healing algorithm to use the item that would heal the character the most, but go over their max health the least.
         if(useItem) {
             //Find the weakest ally
-            for (Actor enemy : enemies) {
-                if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && (weakest == null)) {
-                    weakest = enemy;
-                } else if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && enemy.getHealth() < weakest.getHealth()) {
-                    weakest = enemy;
-                } else {
-                    //NOTHING heal = false;
-                }
-            }
-            if(weakest != null) {
-                enemies.get(characterTurn).getItems().get(usageIndex).use(enemies.get(characterTurn), weakest); //Heal the enemy with the lowest health that is below 30% of max
+            if(target != -1) {
+                enemies.get(characterTurn).getItems().get(usageIndex).use(enemies.get(characterTurn), enemies, target); //Heal the enemy with the lowest health that is below 30% of max
                 return true;
             }
         }
 
         if(useSkill) {
             //Find the weakest ally
-            for (Actor enemy : enemies) {
-                if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && (weakest == null)) {
-                    weakest = enemy;
-                } else if (enemy.getHealth() < (enemy.getMaxHealth() * .30) && enemy.getHealth() < weakest.getHealth()) {
-                    weakest = enemy;
-                } else {
-                    //NOTHING heal = false;
-                }
-            }
-
-            if(weakest != null) {
-                enemies.get(characterTurn).getSkills().get(usageIndex).use(enemies.get(characterTurn), weakest); //Heal the enemy with the lowest health that is below 30% of max
+            if(target != -1) {
+                enemies.get(characterTurn).getSkills().get(usageIndex).use(enemies.get(characterTurn), enemies, target); //Heal the enemy with the lowest health that is below 30% of max
                 return true;
             }
 
         }
         return false;
+    }
+
+    public int getLowTPAlly() {
+        Actor lowest = null;
+        int lowestIndex = 0;
+
+
+        for (int i = 0; i < enemies.size(); i++) {
+            double currentAllyTP = enemies.get(i).getTechniquePoints();
+            double currentAllyMaxTP = enemies.get(i).getMaxTechniquePoints();
+
+            if ((currentAllyTP < (currentAllyMaxTP * LOW)) && (lowest == null)) {
+                lowest = enemies.get(i);
+                lowestIndex = i;
+            } else if ((currentAllyTP  < (currentAllyMaxTP * LOW)) && (currentAllyTP < (lowest.getTechniquePoints()))) {
+                lowest = enemies.get(i);
+                lowestIndex = i;
+            } else {
+                //NOTHING
+            }
+        }
+        if (lowest != null) {
+            return lowestIndex;
+        } else {
+            return -1; //No living allies
+        }
+    }
+
+    /*
+    Finds the weakest ally; one whose health is below 30% of their maximum health
+     */
+    public int getWeakestAlly() {
+        Actor weakest = null;
+        int weakestIndex = 0;
+
+        for (int i = 0; i < enemies.size(); i++) {
+            double currentAllyHP = enemies.get(i).getHealth();
+            double currentAllyMaxHP = enemies.get(i).getMaxHealth();
+
+            if ((currentAllyHP < (currentAllyMaxHP * LOW)) && (weakest == null)) {
+                weakest = enemies.get(i);
+                weakestIndex = i;
+            } else if ((currentAllyHP  < (currentAllyMaxHP * LOW)) && (currentAllyHP < (weakest.getHealth()))) {
+                weakest = enemies.get(i);
+                weakestIndex = i;
+            } else {
+                //NOTHING
+            }
+        }
+        if (weakest != null) {
+            return weakestIndex;
+        } else {
+            return -1; //No living allies
+        }
     }
 
     /*
@@ -171,7 +199,7 @@ public class AI {
     After that if the amount of health left is lower than "the weakest", then this character is the new "the weakest"
     return the index of the weakest
      */
-    protected int seekWeakest() {
+    public int seekWeakest() {
 
         Actor weakest = null;
         int weakestIndex = 0;
@@ -203,7 +231,7 @@ public class AI {
     After that if the amount of health left is greater than "the strongest", then this character is the new "the strongest"
     return the index of the weakest
      */
-    protected int seekStrongest() {
+    public int seekStrongest() {
 
         Actor strongest = null;
         int strongestIndex = 0;
@@ -232,7 +260,7 @@ public class AI {
     /*
     Find the first living hero and use them
      */
-    protected int seekFirstHero() {
+    public int seekFirstHero() {
 
         for(int i = 0; i < heroes.size(); i++) {
             if(heroes.get(i).getHealth() > 0) {
@@ -240,5 +268,13 @@ public class AI {
             }
         }
         return -1; //No living opponents
+    }
+
+    public void setCharacterTurn(int i) {
+        characterTurn = i;
+    }
+
+    public int getCharacterTurn() {
+        return characterTurn;
     }
 }

@@ -1,11 +1,16 @@
 package Skills;
 import Actor.Actor;
+import Game.TextHandler;
 import Items.Intent;
+
+import java.util.Vector;
 
 /**
  * Created by piano_000 on 5/24/2015.
  */
 public class TripleStrike extends Skill {
+
+    protected TextHandler out = TextHandler.getInstance();
 
     public TripleStrike() {
         this.name = "Triple Strike";
@@ -17,35 +22,36 @@ public class TripleStrike extends Skill {
     }
 
     @Override
-    public double use(Actor attacker, Actor opponent) {
+    public double use(Actor attacker, Vector<Actor> opponents, int target) {
         double threatBuilt = 0;
+        Actor opponent = opponents.get(target);
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
-            System.out.println(attacker.getName() + " used " + name + "!");
+            out.printToConsole(attacker.getName() + " used " + name + "!");
 
             //First Attack
             if(attacker.hitCalculator()) {
                 threatBuilt = attacker.attack(opponent);
             } else {
-                System.out.println(attacker.getName() + " missed their attack!");
+                out.printToConsole(attacker.getName() + " missed their attack!");
             }
 
             //Second Attack
             if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second use
                 threatBuilt = threatBuilt + attacker.attack(opponent);
             } else {
-                System.out.println(attacker.getName() + " missed their attack!");
+                out.printToConsole(attacker.getName() + " missed their attack!");
             }
 
             //Third Attack
             if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second use
                 threatBuilt = threatBuilt + attacker.attack(opponent);
             } else {
-                System.out.println(attacker.getName() + " missed their attack!");
+                out.printToConsole(attacker.getName() + " missed their attack!");
             }
 
-            attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
+            attacker.subTechniquePoints(TPCost);
         } else {
-            System.out.println("Not enough TP!");
+            out.printToConsole("Not enough TP!");
         }
         return threatBuilt;
     }

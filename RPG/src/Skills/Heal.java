@@ -1,12 +1,18 @@
 package Skills;
 
 import Actor.Actor;
+import Game.TextHandler;
 import Items.Intent;
 import Actor.*;
+
+import java.util.Vector;
+
 /**
  * Created by piano_000 on 5/24/2015.
  */
 public class Heal extends Skill {
+
+    protected TextHandler out = TextHandler.getInstance();
 
     public Heal() {
         this.name = "Heal";
@@ -20,17 +26,18 @@ public class Heal extends Skill {
     /*
     You cannot miss a heal
      */
-    public double use(Actor attacker, Actor opponent) {
+    public double use(Actor attacker, Vector<Actor> opponents, int target) {
         double threatBuilt = 0;
+        Actor opponent = opponents.get(target);
         if ((attacker.getTechniquePoints() - TPCost) >= 0) {
 
-            System.out.println(attacker.getName() + " used " + name + "!");
-            opponent.setHealth(opponent.getHealth() + damage);
-            System.out.println(attacker.getName() + " healed " + opponent.getName() + " damage to " + damage);
+            out.printToConsole(attacker.getName() + " used " + name + "!");
+            opponent.addHealth(damage);
+            out.printToConsole(attacker.getName() + " healed " + opponent.getName() + " for " + damage);
             threatBuilt = this.damage;
-            attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
+            attacker.subTechniquePoints(TPCost);
         } else {
-            System.out.println("Not enough TP!");
+            out.printToConsole("Not enough TP!");
         }
         return threatBuilt;
     }

@@ -1,12 +1,16 @@
 package Items;
 import Augments.Augment;
 import Actor.*;
+import Game.TextHandler;
+
+import java.util.Vector;
 
 public abstract class Weapon extends Item {
 
 	protected Boolean twoHanded;
 	protected double damage;
 	protected Augment augments;
+	protected TextHandler out = TextHandler.getInstance();
 	
 	public Boolean getTwoHanded(){
 		return twoHanded;
@@ -29,10 +33,10 @@ public abstract class Weapon extends Item {
 	}
  	
 	public void getDetails() {
-		System.out.println(name + " is " + description + ". It does " + damage + " damage.");
+		out.printToConsole(name + " is " + description + ". It does " + damage + " damage.");
 	}
 
-	public void use(Actor caster, Actor target) {
-		System.out.println("Cannot use " + name + ".");
+	public void use(Actor caster, Vector<Actor> opponents, int target) {
+		out.printToConsole("Cannot use " + name + ".");
 	}
 }

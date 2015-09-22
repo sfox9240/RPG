@@ -3,6 +3,7 @@ package Actor;
 import FightClasses.RandomGenerator;
 import Game.Illness;
 import Game.Status;
+import Game.TextHandler;
 import Items.Item;
 import Items.Weapon;
 import Skills.Skill;
@@ -25,6 +26,7 @@ public abstract class Actor {
     protected Illness illness = Illness.NONE;
     protected Status status = Status.NORMAL;
     protected String description;
+    protected TextHandler out = TextHandler.getInstance();
 
     public String getName() {
         return name;
@@ -36,6 +38,21 @@ public abstract class Actor {
 
     public double getMaxHealth() {
         return maxHealth;
+    }
+
+    public void addHealth(double h) {
+        double overflow = (health + h) - maxHealth; //Excess health that exceeds the max health
+        health = health + h;
+        if(health > maxHealth) {
+            health = health - overflow;
+        }
+    }
+
+    public void subHealth(double h) {
+        health = health - h;
+        if(health < 0) {
+            health = 0;
+        }
     }
 
     public void setHealth(double h) {
@@ -58,9 +75,13 @@ public abstract class Actor {
         return skills;
     }
 
+    public void addSkill(Skill s) { skills.add(s); }
+
+    public void addItem(Item i) { items.add(i); }
+
     public void printInventory() {
         for(int i = 0; i < items.size(); i++) {
-            System.out.println(items.get(i).getName());
+            out.printToConsole(items.get(i).getName());
         }
     }
 
@@ -80,12 +101,20 @@ public abstract class Actor {
         maxTechniquePoints = mtp;
     }
 
+    public void addTechniquePoints(int t) {
+        techniquePoints = techniquePoints + t;
+    }
+
+    public void subTechniquePoints(int t) {
+        techniquePoints = techniquePoints - t;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void printStatus() {
-        System.out.println(this.name + "'s Health: " + health + ", TP: " + techniquePoints);
+        out.printToConsole(this.name + "'s Health: " + health + ", TP: " + techniquePoints);
     }
 
     public double getCombatDmg() {
@@ -124,23 +153,23 @@ public abstract class Actor {
         if(hit) {
             //Attack lands
             if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
-                opponent.setHealth(opponent.getHealth() - (getCombatDmg() / 2));
+                opponent.subHealth(getCombatDmg() / 2);
                 threatBuilt = (getCombatDmg() / 2);
-                System.out.println(opponent.getName() + " guarded against the use!");
-                System.out.println(name + " dealt " + (getCombatDmg() / 2) + " damage to " + opponent.getName());
+                out.printToConsole(opponent.getName() + " guarded against the attack!");
+                out.printToConsole(name + " dealt " + (getCombatDmg() / 2) + " damage to " + opponent.getName());
             } else { // Normal Atatck
-                opponent.setHealth(opponent.getHealth() - getCombatDmg());
+                opponent.subHealth(getCombatDmg());
                 threatBuilt = getCombatDmg();
-                System.out.println(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
+                out.printToConsole(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
             }
 
             if(opponent.getHealth() <= 0) {
-                System.out.println(opponent.getName() + " has been felled!");
+                out.printToConsole(opponent.getName() + " has been felled!");
                 opponent.setStatus(Status.FAINTED);
             }
         } else {
             //Attack missed
-            System.out.println(name + " missed their attack!");
+            out.printToConsole(name + " missed their attack!");
         }
         return threatBuilt;
     }
