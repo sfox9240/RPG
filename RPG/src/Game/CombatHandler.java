@@ -45,7 +45,6 @@ public class CombatHandler {
 			for(int i = 0; i < heroes.size(); i++) {
 				if(heroes.get(i).getHealth() > 0 && seekEnemy() != -1) {
 					System.out.println(heroes.get(i).getName() + "'s turn!");
-					//Fancy AI use algorithm
 					playerAction(i);
 				}
 			}
@@ -55,7 +54,7 @@ public class CombatHandler {
 				if (enemies.get(j).getHealth() > 0 && seekHero() != -1) {
 					System.out.println(enemies.get(j).getName() + "'s turn!");
 					//Fancy AI use algorithm
-					enemyAI.takeTurn(j, heroThreat.getGreatestSource()); //Attack the first enemy found to be alive
+					enemyAI.takeTurn(j, heroThreat.getGreatestSource()); //Fancy AI use algorithm
 				}
 			}
 		}

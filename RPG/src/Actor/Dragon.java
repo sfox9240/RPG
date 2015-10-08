@@ -2,6 +2,7 @@ package Actor;
 import java.util.Vector;
 import Actor.*;
 import Items.*;
+import Skills.WeakHealAll;
 
 
 /**
@@ -20,5 +21,7 @@ public class Dragon extends Actor {
         this.damageMod = 6;
         this.items = new Vector<Item>();
         this.weapon = new Claw("Dragon Claw", "A dragon claw", false);
+
+        this.addSkill(new WeakHealAll());
     }
 }

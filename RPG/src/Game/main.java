@@ -78,8 +78,8 @@ public class main {
 		TripleStrike ts = new TripleStrike();
 		Heal heals = new Heal();
 		Fireball fb = new Fireball();
-		Link.addSkill(ts);
-		Link.addSkill(fb);
+		Link.addSkill(new TripleStrike());
+		Link.addSkill(new Fireball());
 		Zelda.addSkill(heals);
 		WeakHealAll wha = new WeakHealAll();
 		Zelda.addSkill(wha);

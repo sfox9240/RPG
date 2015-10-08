@@ -4,7 +4,6 @@ import Actor.*;
 import FightClasses.Knight;
 import FightClasses.Wizard;
 import Items.Sword;
-import Skills.DoubleStrike;
 import Skills.FireBreath;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,6 +35,7 @@ public class FireBreathTest {
         Dragon dragon = new Dragon();
         FireBreath fb = new FireBreath();
         dragon.addSkill(fb);
+
 
         double threatcount = dragon.getSkills().get(0).use(dragon, party, 0);
         Assert.assertEquals(threatcount, (fb.getDamage() * 2), 0);

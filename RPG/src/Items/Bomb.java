@@ -10,8 +10,6 @@ import java.util.Vector;
  */
 public class Bomb extends Item {
 
-    protected TextHandler out = TextHandler.getInstance();
-
     public Bomb() {
         name = "Bomb";
         description = "A small throwable bomb.";

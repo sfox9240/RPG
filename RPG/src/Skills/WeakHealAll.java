@@ -10,8 +10,8 @@ import java.util.Vector;
  */
 public class WeakHealAll extends Skill {
 
-    public void WeakHealAll() {
-        this.name = "Heal";
+    public WeakHealAll() {
+        this.name = "Weak Heal All";
         this.description = "Heals all allies for 15 HP";
         this.damage = 15; // TODO: I should probably rename damage to something else.
         this.element = null;
@@ -26,9 +26,8 @@ public class WeakHealAll extends Skill {
             out.printToConsole(attacker.getName() + " used " + name + "!");
             for(int i = 0; i < opponents.size(); i++) {
                 Actor opponent = opponents.get(i);
-                opponent.addHealth(damage);
+                threatBuilt = threatBuilt + opponent.addHealth(damage);
                 out.printToConsole(attacker.getName() + " healed " + opponent.getName() + " for " + damage);
-                threatBuilt = threatBuilt + this.damage;
             }
             attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
         } else {

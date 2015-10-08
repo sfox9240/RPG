@@ -40,12 +40,19 @@ public abstract class Actor {
         return maxHealth;
     }
 
-    public void addHealth(double h) {
+    public int addHealth(double h) {
         double overflow = (health + h) - maxHealth; //Excess health that exceeds the max health
         health = health + h;
+        int actualHeal;
+        if(overflow > 0) {
+            actualHeal = (int) (h - overflow);
+        } else {
+            actualHeal = (int) h;
+        }
         if(health > maxHealth) {
             health = health - overflow;
         }
+        return actualHeal;
     }
 
     public void subHealth(double h) {

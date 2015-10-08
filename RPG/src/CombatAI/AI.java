@@ -161,7 +161,7 @@ public class AI {
         if (lowest != null) {
             return lowestIndex;
         } else {
-            return -1; //No living allies
+            return -1; //No living allies TODO: Add error handling
         }
     }
 
@@ -183,13 +183,13 @@ public class AI {
                 weakest = enemies.get(i);
                 weakestIndex = i;
             } else {
-                //NOTHING
+                //NOTHING TODO: Add error handling
             }
         }
         if (weakest != null) {
             return weakestIndex;
         } else {
-            return -1; //No living allies
+            return -1; //No living allies TODO: Add error handling
         }
     }
 
@@ -215,13 +215,13 @@ public class AI {
                 weakest = heroes.get(i);
                 weakestIndex = i;
             } else {
-                //NOTHING
+                //NOTHING TODO: Add error handling
             }
         }
         if (weakest != null) {
             return weakestIndex;
         } else {
-            return -1; //No living opponents
+            return -1; //No living opponents TODO: Add error handling
         }
     }
 
@@ -247,13 +247,13 @@ public class AI {
                 strongest = heroes.get(i);
                 strongestIndex = i;
             } else {
-                //NOTHING
+                //NOTHING TODO: Add error handling
             }
         }
         if (strongest != null) {
             return strongestIndex;
         } else {
-            return -1; //No living opponents
+            return -1; //No living opponents TODO: Add error handling
         }
     }
 
@@ -267,7 +267,7 @@ public class AI {
                 return i;
             }
         }
-        return -1; //No living opponents
+        return -1; //No living opponents TODO: Add error handling
     }
 
     public void setCharacterTurn(int i) {
