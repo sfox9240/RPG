@@ -1,12 +1,12 @@
-package Game;
+package Multiplayer;
 
 import java.io.IOException;
 
 /**
  * Created by piano_000 on 10/7/2015.
  */
-public class ClientMain {
+public class ServerMain {
     public static void main(String [] args) throws IOException {
-        ClientMultiplayer server = new ClientMultiplayer("localhost", 9503);
+        ServerMultiplayer server = new ServerMultiplayer(9503);
     }
 }

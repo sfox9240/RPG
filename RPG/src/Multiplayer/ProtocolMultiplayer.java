@@ -1,4 +1,4 @@
-package Game;
+package Multiplayer;
 
 /**
  * Created by piano_000 on 10/7/2015.
