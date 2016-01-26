@@ -4,7 +4,6 @@ import Actor.Actor;
 import Game.Status;
 import Game.TextHandler;
 import Items.Intent;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Vector;
 
@@ -70,7 +69,7 @@ public abstract class Skill {
                 threatBuilt = this.damage;
                 if (opponent.getHealth() <= 0) {
                     out.printToConsole(opponent.getName() + " has been felled!");
-                    opponent.setStatus(Status.FAINTED);
+                    opponent.setStatus(Status.State.FAINTED, -1);
                 }
             } else {
                 //Attack missed

@@ -38,6 +38,6 @@ public class FireBreathTest {
 
 
         double threatcount = dragon.getSkills().get(0).use(dragon, party, 0);
-        Assert.assertEquals(threatcount, (fb.getDamage() * 2), 0);
+        Assert.assertEquals((fb.getDamage() * 2), threatcount, 0);
     }
 }

@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.Vector;
 import Actor.*;
 import CombatAI.AI;
-import FightClasses.RandomGenerator;
 import Items.Intent;
 import Items.Item;
 import Skills.Skill;
@@ -69,8 +68,8 @@ public class CombatHandler {
 	protected void playerAction(int heroTurn) {
 		Boolean validResponse = false;
 		String action1;
-		if(heroes.get(heroTurn).getStatus() == Status.GUARDING) { //New turn, no longer guarding
-			heroes.get(heroTurn).setStatus(Status.NORMAL);
+		if(heroes.get(heroTurn).getStatus() == Status.State.GUARDING) { //New turn, no longer guarding
+			heroes.get(heroTurn).setStatus(Status.State.NORMAL);
 		}
 
 		while(!validResponse) {
@@ -83,7 +82,7 @@ public class CombatHandler {
 					break;
 				case "2":
 					validResponse = true;
-					heroes.get(heroTurn).setStatus(Status.GUARDING);
+					heroes.get(heroTurn).setStatus(Status.State.GUARDING);
 					System.out.println(heroes.get(heroTurn).getName() + " is guarding!");
 					break;
 				case "3":
@@ -117,7 +116,7 @@ public class CombatHandler {
 		Boolean hit = attacker.hitCalculator();
 		if(hit) {
 			//Attack lands
-			if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
+			if(opponent.getStatus() == Status.State.GUARDING) { //Guarding halves the amount of damage delivered
 				opponent.setHealth(opponent.getHealth() - (attacker.getCombatDmg() / 2));
 				System.out.println(opponent.getName() + " guarded against the attack!");
 				System.out.println(attacker.getName() + " dealt " + (attacker.getCombatDmg() / 2) + " damage to " + opponent.getName());
@@ -130,7 +129,7 @@ public class CombatHandler {
 
 			if(opponent.getHealth() <= 0) {
 				System.out.println(opponent.getName() + " has been felled!");
-				opponent.setStatus(Status.FAINTED);
+				opponent.setStatus(Status.State.FAINTED);
 			}
 		} else {
 			//Attack missed

@@ -14,7 +14,7 @@ import java.util.Vector;
 /**
  * Created by piano_000 on 9/4/2015.
  */
-public class ThreeatAnalyzerTest {
+public class ThreatAnalyzerTest {
 
     ThreatAnalyzer ta = null;
     Hero Link = null;

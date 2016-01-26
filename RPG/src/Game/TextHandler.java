@@ -10,6 +10,11 @@ package Game;
 public class TextHandler {
 
     private static TextHandler firstInstance = null;
+    private Boolean isLocalGame = true;
+
+    private void TextHandler(Boolean localGame) {
+        isLocalGame = localGame;
+    }
 
     private void TextHandler() {}
 
@@ -24,7 +29,11 @@ public class TextHandler {
     Sends text to the console
      */
     public void printToConsole(String printString) {
-        System.out.println(printString);
+        if(isLocalGame){
+            System.out.println(printString);
+        } else {
+            //TODO Add code to send multiplayer data to connected members
+        }
     }
 
     public void printToLog() {

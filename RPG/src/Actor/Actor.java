@@ -24,7 +24,7 @@ public abstract class Actor {
     protected int techniquePoints;
     protected int maxTechniquePoints;
     protected Illness illness = Illness.NONE;
-    protected Status status = Status.NORMAL;
+    protected Status status = new Status(Status.State.NORMAL,0);
     protected String description;
     protected TextHandler out = TextHandler.getInstance();
 
@@ -136,12 +136,19 @@ public abstract class Actor {
         illness = i;
     }
 
-    public Status getStatus() {
-        return status;
+    public Status.State getStatus() {
+        return status.getState();
     }
 
-    public void setStatus(Status s) {
-        status = s;
+    public void setStatus(Status.State s) {
+        status.setState(s, -1); //Default to everlasting state
+    }
+
+    public void setStatus(Status.State s, int duration) {
+        status.setState(s, duration);
+    }
+    public Status getFullStatus() {
+        return status;
     }
 
     public Boolean hitCalculator() {
@@ -159,7 +166,7 @@ public abstract class Actor {
         double threatBuilt = 0;
         if(hit) {
             //Attack lands
-            if(opponent.getStatus() == Status.GUARDING) { //Guarding halves the amount of damage delivered
+            if(opponent.getStatus() == Status.State.GUARDING) { //Guarding halves the amount of damage delivered
                 opponent.subHealth(getCombatDmg() / 2);
                 threatBuilt = (getCombatDmg() / 2);
                 out.printToConsole(opponent.getName() + " guarded against the attack!");
@@ -172,7 +179,7 @@ public abstract class Actor {
 
             if(opponent.getHealth() <= 0) {
                 out.printToConsole(opponent.getName() + " has been felled!");
-                opponent.setStatus(Status.FAINTED);
+                opponent.setStatus(Status.State.FAINTED, -1);
             }
         } else {
             //Attack missed
