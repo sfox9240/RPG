@@ -32,7 +32,7 @@ public abstract class Item {
 					out.printToConsole(caster.getName() + " dealt " + value + " damage to " + opponent.getName() + " with " + name);
 				} else if(intent == Intent.HEAL && opponent.getHealth() > 0) {
 					opponent.addHealth(value);
-					out.printToConsole(caster.getName() + " healed " + value + " for" + opponent.getName() + " with " + name);
+					out.printToConsole(caster.getName() + " healed " + value + " for " + opponent.getName() + " with " + name);
 				} else if(intent == Intent.RESTORE && opponent.getHealth() > 0) {
 					opponent.addTechniquePoints(value);
 					out.printToConsole(caster.getName() + "restored " + value + " of TP for " + opponent.getName() + " with " + name);
@@ -45,7 +45,7 @@ public abstract class Item {
 				out.printToConsole(caster.getName() + " dealt " + value + " damage to " + opponent.getName() + " with " + name);
 			} else if(intent == Intent.HEAL && opponent.getHealth() > 0) {
 				opponent.addHealth(value);
-				out.printToConsole(caster.getName() + " healed " + value + " for" + opponent.getName() + " with " + name);
+				out.printToConsole(caster.getName() + " healed " + value + " for " + opponent.getName() + " with " + name);
 			} else if(intent == Intent.RESTORE && opponent.getHealth() > 0) {
 				opponent.addTechniquePoints(value);
 				out.printToConsole(caster.getName() + "restored " + value + " of TP for " + opponent.getName() + " with " + name);

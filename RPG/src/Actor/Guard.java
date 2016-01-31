@@ -1,6 +1,7 @@
 package Actor;
 import Actor.*;
 import Items.*;
+import Skills.DoubleStrike;
 
 import java.util.Vector;
 
@@ -16,5 +17,6 @@ public class Guard extends Actor {
 		this.damageMod = 2;
 		this.items = new Vector<Item>();
 		this.weapon = new Sword("Iron Sword", "An iron sword. Standard issue.", false);
+		skills.add(new DoubleStrike());
 	}
 }

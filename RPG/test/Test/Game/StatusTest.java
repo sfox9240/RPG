@@ -5,6 +5,7 @@ import Actor.Hero;
 import FightClasses.BanditKing;
 import FightClasses.Knight;
 import FightClasses.Wizard;
+import Game.State;
 import Game.Status;
 import Items.Bow;
 import Items.Sword;
@@ -51,20 +52,19 @@ public class StatusTest {
 
     @Test
     public void TestSetState() {
-        Assert.assertEquals(Status.State.NORMAL, party.get(0).getStatus());
-        party.get(0).setStatus(Status.State.FROZEN, 3);
-        Assert.assertEquals(Status.State.FROZEN, party.get(0).getStatus());
+        Assert.assertEquals(State.NORMAL, party.get(0).getStatus().getState());
+        party.get(0).getStatus().setState(State.FROZEN, 3);
+        Assert.assertEquals(State.FROZEN, party.get(0).getStatus().getState());
     }
 
     @Test
-    public void TestElapse() {
-        Assert.assertEquals(Status.State.NORMAL, party.get(0).getStatus());
-        party.get(0).setStatus(Status.State.FROZEN, 3);
-        Assert.assertEquals(Status.State.FROZEN, party.get(0).getStatus());
-        Assert.assertEquals(3, party.get(0).getFullStatus().getDuration());
-        party.get(0).getFullStatus().elapse(1);
-        Assert.assertEquals(2, party.get(0).getFullStatus().getDuration());
-
+    public void TestElapseState() {
+        Assert.assertEquals(State.NORMAL, party.get(0).getStatus().getState());
+        party.get(0).getStatus().setState(State.FROZEN, 3);
+        Assert.assertEquals(State.FROZEN, party.get(0).getStatus().getState());
+        Assert.assertEquals(3, party.get(0).getStatus().getStateDuration());
+        party.get(0).getStatus().elapseStete(1);
+        Assert.assertEquals(2, party.get(0).getStatus().getStateDuration());
     }
 
 }

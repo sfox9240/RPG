@@ -11,7 +11,7 @@ import java.util.Vector;
 /**
  * Created by piano_000 on 5/26/2015.
  *
- * TODO: Create more robust AI that can handel status effects like poison and burning
+ * TODO: Create more robust AI that can handle status effects like poison and burning
  */
 public class AI {
     protected Vector<Actor> heroes;
@@ -43,19 +43,19 @@ public class AI {
 
             switch(randomAttack) {
                 case 1:
-                    out.printToConsole("The AI chooses to use the weakest.");
+                    //out.printToConsole("The AI chooses to attack the weakest.");
                     enemies.get(characterTurn).attack(heroes.get(seekWeakest()));
                     break;
                 case 2:
-                    out.printToConsole("The AI chooses to use the strongest.");
+                    //out.printToConsole("The AI chooses to attack the strongest.");
                     enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
                     break;
                 case 3:
-                    out.printToConsole("The AI chooses to use the first living.");
+                    //out.printToConsole("The AI chooses to attack the first living.");
                     enemies.get(characterTurn).attack(heroes.get(seekFirstHero()));
                     break;
                 case 4:
-                    out.printToConsole("The AI Chooses to attack the biggest threat.");
+                    //out.printToConsole("The AI Chooses to attack the biggest threat.");
                     enemies.get(characterTurn).attack(heroes.get(greatestThreat));
             }
 

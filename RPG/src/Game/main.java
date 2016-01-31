@@ -81,6 +81,7 @@ public class main {
 		Link.addSkill(new TripleStrike());
 		Link.addSkill(new Fireball());
 		Zelda.addSkill(heals);
+		Zelda.addSkill(new PoisonCloud());
 		WeakHealAll wha = new WeakHealAll();
 		Zelda.addSkill(wha);
 

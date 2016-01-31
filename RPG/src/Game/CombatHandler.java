@@ -39,10 +39,11 @@ public class CombatHandler {
 
 		//While both teams are alive
 		System.out.println("BATTLE START!");
-		while(heroesAlive() && enemiesAlive()) {
+		while(teamAlive(heroes) && teamAlive(enemies)) {
 			//each of the heroes gets to use
 			for(int i = 0; i < heroes.size(); i++) {
-				if(heroes.get(i).getHealth() > 0 && seekEnemy() != -1) {
+				heroes.get(i).takeStatusDamage();
+				if(heroes.get(i).getHealth() > 0 && seekOpponent(enemies) != -1) {
 					System.out.println(heroes.get(i).getName() + "'s turn!");
 					playerAction(i);
 				}
@@ -50,12 +51,15 @@ public class CombatHandler {
 			heroThreat.determineThreat();
 			//each other enemies gets to use
 			for (int j = 0; j < enemies.size(); j++) {
-				if (enemies.get(j).getHealth() > 0 && seekHero() != -1) {
+				enemies.get(j).takeStatusDamage();
+				if (enemies.get(j).getHealth() > 0 && seekOpponent(heroes) != -1) {
 					System.out.println(enemies.get(j).getName() + "'s turn!");
 					//Fancy AI use algorithm
 					enemyAI.takeTurn(j, heroThreat.getGreatestSource()); //Fancy AI use algorithm
 				}
 			}
+			//Decrement illness and status durations
+			decrementStatusDurations();
 		}
 		victoryMessage();
 		clearBattleField();
@@ -68,8 +72,8 @@ public class CombatHandler {
 	protected void playerAction(int heroTurn) {
 		Boolean validResponse = false;
 		String action1;
-		if(heroes.get(heroTurn).getStatus() == Status.State.GUARDING) { //New turn, no longer guarding
-			heroes.get(heroTurn).setStatus(Status.State.NORMAL);
+		if(heroes.get(heroTurn).getStatus().getState() == State.GUARDING) { //New turn, no longer guarding
+			heroes.get(heroTurn).getStatus().setState(State.NORMAL, 0);
 		}
 
 		while(!validResponse) {
@@ -82,7 +86,7 @@ public class CombatHandler {
 					break;
 				case "2":
 					validResponse = true;
-					heroes.get(heroTurn).setStatus(Status.State.GUARDING);
+					heroes.get(heroTurn).getStatus().setState(State.GUARDING, 1);
 					System.out.println(heroes.get(heroTurn).getName() + " is guarding!");
 					break;
 				case "3":
@@ -92,7 +96,7 @@ public class CombatHandler {
 					validResponse = useSkill(heroTurn);
 					break;
 				case "5":
-					//TODO: Implement Run
+					//TODO: Implement Run and, you know, a place to run too...
 					break;
 				default:
 					break;
@@ -116,7 +120,7 @@ public class CombatHandler {
 		Boolean hit = attacker.hitCalculator();
 		if(hit) {
 			//Attack lands
-			if(opponent.getStatus() == Status.State.GUARDING) { //Guarding halves the amount of damage delivered
+			if(opponent.getStatus().getState() == State.GUARDING) { //Guarding halves the amount of damage delivered
 				opponent.setHealth(opponent.getHealth() - (attacker.getCombatDmg() / 2));
 				System.out.println(opponent.getName() + " guarded against the attack!");
 				System.out.println(attacker.getName() + " dealt " + (attacker.getCombatDmg() / 2) + " damage to " + opponent.getName());
@@ -129,7 +133,7 @@ public class CombatHandler {
 
 			if(opponent.getHealth() <= 0) {
 				System.out.println(opponent.getName() + " has been felled!");
-				opponent.setStatus(Status.State.FAINTED);
+				opponent.getStatus().setState(State.FAINTED, -1);
 			}
 		} else {
 			//Attack missed
@@ -155,15 +159,17 @@ public class CombatHandler {
 		Boolean validAttackResponse = false;
 		while(!validAttackResponse) {
 			action = readAction.nextLine();
-			int action2val = Integer.parseInt(action);
+			if(action.length() > 0 && isValid(action, "Integer")) {
+				int action2val = Integer.parseInt(action);
 
-			if(action2val <= enemies.size() && action2val > 0) {
-				return (action2val - 1);
-			}
+				if (action2val <= enemies.size() && action2val > 0) {
+					return (action2val - 1);
+				}
 
-			//Back command
-			if((action2val) == 0) {
-				validAttackResponse = true;
+				//Back command
+				if ((action2val) == 0) {
+					validAttackResponse = true;
+				}
 			}
 		}
 		return -2; // Error
@@ -176,28 +182,30 @@ public class CombatHandler {
 		while(!validItemResponse) {
 			printItems(heroTurn);
 			action = readAction.nextLine();
-			int actionVal = Integer.parseInt(action);
+			if(action.length() > 0 && isValid(action, "Integer")) {
+				int actionVal = Integer.parseInt(action);
 
-			if(actionVal <= heroes.get(heroTurn).getItems().size() && actionVal > 0) {
-				validItemResponse = true;
-
-				int target = selectItemTarget(heroTurn, (actionVal - 1));
-				if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1));
-					//heroes.get(heroTurn).useItem(heroes.get(target - 1), (actionVal- 1));
-					validResponse = true;
-				} else if(heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1));
-					//heroes.get(heroTurn).useItem(enemies.get(target - 1), (actionVal - 1));
-					validResponse = true;
-				} else { //Cannot Equip weapon during combat
-					System.out.println("Cannot equip weapons during combat");
+				//Back command
+				if ((actionVal) == 0) {
+					validItemResponse = true;
 				}
-			}
 
-			//Back command
-			if((actionVal) == 0) {
-				validItemResponse = true;
+				if (actionVal <= heroes.get(heroTurn).getItems().size() && actionVal > 0) {
+					validItemResponse = true;
+
+					int target = selectItemTarget(heroTurn, (actionVal - 1));
+					if (heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
+						heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1));
+						//heroes.get(heroTurn).useItem(heroes.get(target - 1), (actionVal- 1));
+						validResponse = true;
+					} else if (heroes.get(heroTurn).getItems().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
+						heroes.get(heroTurn).getItems().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1));
+						//heroes.get(heroTurn).useItem(enemies.get(target - 1), (actionVal - 1));
+						validResponse = true;
+					} else { //Cannot Equip weapon during combat
+						System.out.println("Cannot equip weapons during combat");
+					}
+				}
 			}
 		}
 		return validResponse;
@@ -222,29 +230,28 @@ public class CombatHandler {
 				printHeroes();
 			}
 			action = readAction.nextLine();
-			int actionVal = Integer.parseInt(action);
+			if(action.length() > 0 && isValid(action, "Integer")) {
+				int actionVal = Integer.parseInt(action);
 
-			//Determine what is a valid response
-			if(item.getIntent() == Intent.HARM) {
-				if (actionVal <= enemies.size() && actionVal > 0) {
-					validResponse = true;
+				//Back command
+				if ((actionVal) == 0) {
 					return actionVal;
 				}
-			}
 
-			if(item.getIntent() == Intent.HEAL) {
-				if (actionVal <= heroes.size() && actionVal > 0) {
-					validResponse = true;
-					return actionVal;
+				//Determine what is a valid response
+				if (item.getIntent() == Intent.HARM) {
+					if (actionVal <= enemies.size() && actionVal > 0) {
+						return actionVal;
+					}
 				}
-			}
 
-			//Back command
-			if((actionVal) == 0) {
-				validResponse = true;
-				return actionVal;
+				if (item.getIntent() == Intent.HEAL) {
+					if (actionVal <= heroes.size() && actionVal > 0) {
+						return actionVal;
+					}
+				}
+				System.out.println("Invalid Selection!");
 			}
-			System.out.println("Invalid Selection!");
 		}
 		return -2; // Error Code
 	}
@@ -253,30 +260,32 @@ public class CombatHandler {
 		String action;
 		Boolean validItemResponse = false;
 		Boolean validResponse = false;
-		while(!validItemResponse) {
-			printSkills(heroTurn);
+		while(!validItemResponse) { //Until the user input a valid item index...
+			printSkills(heroTurn); //Print the list of skills and read in the user's selected skill
 			action = readAction.nextLine();
-			int actionVal = Integer.parseInt(action);
+			if(action.length() > 0 && isValid(action, "Integer")) { //Confirm the input is actually an integer...
+				int actionVal = Integer.parseInt(action);
+				//Back command
+				if (actionVal == 0) { //and if it's zero then go back...
+					validItemResponse = true;
+				}  else if (actionVal <= heroes.get(heroTurn).getSkills().size() && actionVal > 0) { //if its a valid skill index let's do some work...
+					validItemResponse = true;
+					int target = selectSkillTarget(heroTurn, (actionVal - 1)); //Select the target of the skill
 
-			if (actionVal <= heroes.get(heroTurn).getSkills().size() && actionVal > 0) {
-				validItemResponse = true;
-				int target = selectSkillTarget(heroTurn, (actionVal - 1));
-				if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1)));
-					//System.out.println("result: " + heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes.get(target - 1)));
-					validResponse = true;
-				} else if(heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-					heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1)));
-					//System.out.println("result: " + heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies.get(target - 1)));
-					validResponse = true;
-				} else { //Cannot Equip weapon during combat
-					System.out.println("Cannot equip weapons during combat");
+					//Back command
+					if(target == -1) { //If the target is -1, (meaning zero was selected) then go back to the primary menu
+						return false;
+					}
+					if (heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
+						heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1)));
+						validResponse = true;
+					} else if (heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
+						heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1)));
+						validResponse = true;
+					} else { //Cannot Equip weapon during combat
+						System.out.println("Cannot equip weapons during combat");
+					}
 				}
-			}
-
-			//Back command
-			if((actionVal) == 0) {
-				validItemResponse = true;
 			}
 		}
 		return validResponse;
@@ -299,29 +308,28 @@ public class CombatHandler {
 				printHeroes();
 			}
 			action = readAction.nextLine();
-			int actionVal = Integer.parseInt(action);
+			if(action.length() > 0 && isValid(action, "Integer")) {
+				int actionVal = Integer.parseInt(action);
 
-			//Determine what is a valid response
-			if(skill.getIntent() == Intent.HARM) {
-				if (actionVal <= enemies.size() && actionVal > 0) {
-					validResponse = true;
+				//Back command
+				if ((actionVal) == 0) {
 					return actionVal;
 				}
-			}
 
-			if(skill.getIntent() == Intent.HEAL) {
-				if (actionVal <= heroes.size() && actionVal > 0) {
-					validResponse = true;
-					return actionVal;
+				//Determine what is a valid response
+				if (skill.getIntent() == Intent.HARM) {
+					if (actionVal <= enemies.size() && actionVal > 0) {
+						return actionVal;
+					}
 				}
-			}
 
-			//Back command
-			if((actionVal) == 0) {
-				validResponse = true;
-				return actionVal;
+				if (skill.getIntent() == Intent.HEAL) {
+					if (actionVal <= heroes.size() && actionVal > 0) {
+						return actionVal;
+					}
+				}
+				System.out.println("Invalid Selection!");
 			}
-			System.out.println("Invalid Selection!");
 		}
 		return -2; // Error Code
 	}
@@ -342,7 +350,9 @@ public class CombatHandler {
 	 */
 	protected void printEnemies() {
 		for(int i = 0; i < enemies.size(); i++) {
-			System.out.println((i + 1) + ") " + enemies.get(i).getName() + " HP: " + enemies.get(i).getHealth());
+			System.out.println((i + 1) + ") " + enemies.get(i).getName() + " HP: " + enemies.get(i).getHealth()
+					+ " Status: " + enemies.get(i).getStatus().getState() + " Illness: " + enemies.get(i).getStatus().getIllness()
+					+ "(" + enemies.get(i).getStatus().getIllnessDuration() + ")");
 		}
 		System.out.println("Select an action: ");
 	}
@@ -368,38 +378,50 @@ public class CombatHandler {
 		System.out.println("Select an action: ");
 	}
 
-	/*
-	 * TODO: Find a way to standardize these methods so they work for both Heroes and Enemies
-	 */
-	
+	protected void decrementStatusDurations() {
+		for(int i = 0; i < heroes.size(); i++) {
+			if(heroes.get(i).getStatus().getState() != State.NORMAL || heroes.get(i).getStatus().getState() != State.FAINTED) {
+				heroes.get(i).getStatus().elapseStete(1);
+				if(heroes.get(i).getStatus().getStateDuration() <= 0) {
+					heroes.get(i).getStatus().setState(State.NORMAL, -1);
+				}
+			}
+			if(heroes.get(i).getStatus().getIllness() != Illness.NONE) {
+				heroes.get(i).getStatus().elapseIllness(1);
+				if(heroes.get(i).getStatus().getIllnessDuration() <= 0) {
+					heroes.get(i).getStatus().setIllness(Illness.NONE, -1);
+				}
+			}
+		}
+		for(int i = 0; i < enemies.size(); i++) {
+			if(enemies.get(i).getStatus().getState() != State.NORMAL || enemies.get(i).getStatus().getState() != State.FAINTED) {
+				enemies.get(i).getStatus().elapseStete(1);
+				if(enemies.get(i).getStatus().getStateDuration() <= 0) {
+					enemies.get(i).getStatus().setState(State.NORMAL, -1);
+				}
+			}
+			if(enemies.get(i).getStatus().getIllness() != Illness.NONE) {
+				enemies.get(i).getStatus().elapseIllness(1);
+				if(enemies.get(i).getStatus().getIllnessDuration() <= 0) {
+					enemies.get(i).getStatus().setIllness(Illness.NONE, -1);
+				}
+			}
+		}
+	}
+
 	/*
 	 * Checks the health of all members of the team
 	 * If number of dead members are equal to the total team members
 	 * the team is dead.
 	 */
-	protected boolean heroesAlive() {
+	protected boolean teamAlive(Vector<Actor> team) {
 		int deadMembers = 0;
-		for(int i = 0; i < heroes.size(); i++) {
-			if(heroes.get(i).getHealth() <= 0) {
+		for(int i = 0; i < team.size(); i++) {
+			if(team.get(i).getHealth() <= 0) {
 				deadMembers++;
 			}
 		}
-		if(deadMembers == heroes.size()){
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	protected boolean enemiesAlive() {
-		int deadMembers = 0;
-		for(int i = 0; i < enemies.size(); i++) {
-			if(enemies.get(i).getHealth() <= 0) {
-				deadMembers++;
-			}
-		}
-		
-		if(deadMembers == enemies.size()){
+		if(deadMembers == team.size()){
 			return false;
 		} else {
 			return true;
@@ -407,20 +429,9 @@ public class CombatHandler {
 	}
 	
 	//Check each opponent until you find a live one, return that one
-	protected int seekEnemy() {
-		
-		for(int i = 0; i < enemies.size(); i++) {
-			if(enemies.get(i).getHealth() > 0) {
-				return i;
-			}
-		}
-		return -1; //No living opponents
-	}
-	
-	protected int seekHero() {
-		
-		for(int i = 0; i < heroes.size(); i++) {
-			if(heroes.get(i).getHealth() > 0) {
+	protected int seekOpponent(Vector<Actor> team) {
+		for(int i = 0; i < team.size(); i++) {
+			if(team.get(i).getHealth() > 0) {
 				return i;
 			}
 		}
@@ -428,7 +439,7 @@ public class CombatHandler {
 	}
 	
 	protected void victoryMessage() {
-		if(heroesAlive()) {
+		if(teamAlive(heroes)) {
 			System.out.println("The enemies are defeated! You Win!");
 		} else {
 			System.out.println("The party was defeated. GAME OVER!");
@@ -442,6 +453,18 @@ public class CombatHandler {
 		this.heroes = null;
 		this.enemies = null;
 	}
-	
-	
+
+	/*
+	Helper function:
+	Checks if a string is a valid Integer or alphanumeric string
+	 */
+	public static Boolean isValid(String str, String clazz) {
+		if(clazz.equals("Integer")) {
+			return str.matches("(\\+|-)?[0-9]+");
+		} else if(clazz.equals("String")) {
+			return str.matches("[A-Za-z]+");
+		} else {
+			return false;
+		}
+	}
 }

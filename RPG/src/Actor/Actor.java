@@ -7,6 +7,7 @@ import Game.TextHandler;
 import Items.Item;
 import Items.Weapon;
 import Skills.Skill;
+import Game.State;
 
 import java.util.Vector;
 
@@ -23,8 +24,7 @@ public abstract class Actor {
     protected Vector<Skill> skills = new Vector<Skill>();
     protected int techniquePoints;
     protected int maxTechniquePoints;
-    protected Illness illness = Illness.NONE;
-    protected Status status = new Status(Status.State.NORMAL,0);
+    protected Status status = new Status(State.NORMAL,0, Illness.NONE, 0);
     protected String description;
     protected TextHandler out = TextHandler.getInstance();
 
@@ -121,34 +121,19 @@ public abstract class Actor {
     }
 
     public void printStatus() {
-        out.printToConsole(this.name + "'s Health: " + health + ", TP: " + techniquePoints);
+        out.printToConsole(this.name + "'s Health: " + health + ", TP: " + techniquePoints + ", State: " + status.getState() + ", Illness: " + status.getIllness());
     }
 
     public double getCombatDmg() {
         return getDamageMod() + weapon.getDamage();
     }
 
-    public Illness getIllness() {
-        return illness;
-    }
-
-    public void setIllness(Illness i) {
-        illness = i;
-    }
-
-    public Status.State getStatus() {
-        return status.getState();
-    }
-
-    public void setStatus(Status.State s) {
-        status.setState(s, -1); //Default to everlasting state
-    }
-
-    public void setStatus(Status.State s, int duration) {
-        status.setState(s, duration);
-    }
-    public Status getFullStatus() {
+    public Status getStatus() {
         return status;
+    }
+
+    public void setStatus(Status s) {
+        status = s;
     }
 
     public Boolean hitCalculator() {
@@ -166,7 +151,7 @@ public abstract class Actor {
         double threatBuilt = 0;
         if(hit) {
             //Attack lands
-            if(opponent.getStatus() == Status.State.GUARDING) { //Guarding halves the amount of damage delivered
+            if(opponent.getStatus().getState() == State.GUARDING) { //Guarding halves the amount of damage delivered
                 opponent.subHealth(getCombatDmg() / 2);
                 threatBuilt = (getCombatDmg() / 2);
                 out.printToConsole(opponent.getName() + " guarded against the attack!");
@@ -179,12 +164,42 @@ public abstract class Actor {
 
             if(opponent.getHealth() <= 0) {
                 out.printToConsole(opponent.getName() + " has been felled!");
-                opponent.setStatus(Status.State.FAINTED, -1);
+                opponent.getStatus().setState(State.FAINTED, -1);
             }
         } else {
             //Attack missed
             out.printToConsole(name + " missed their attack!");
         }
         return threatBuilt;
+    }
+
+    /*
+    Damages self, caused by state effects
+    TODO: Develop a damage algorithm for illness damage
+     */
+    public void takeStatusDamage() {
+        Illness currentIllness = status.getIllness();
+        int poisonDmg = 5;
+        int freezingDmg = 3;
+        int burningDmg = 4;
+
+        switch(currentIllness) {
+            case POISON:
+                health = health - poisonDmg;
+                out.printToConsole(name + " took " + poisonDmg + " poison damage.");
+                break;
+            case FREEZING:
+                health = health - freezingDmg;
+                out.printToConsole(name + " took " + freezingDmg + " freezing damage.");
+                break;
+            case BURNING:
+                health = health - burningDmg;
+                out.printToConsole(name + " took " + burningDmg + " burning damage.");
+                break;
+        }
+        if(health <= 0) {
+            //out.printToConsole(name + " has been felled!");
+            status.setState(State.FAINTED, -1);
+        }
     }
 }

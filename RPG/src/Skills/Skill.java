@@ -1,6 +1,7 @@
 package Skills;
 import Game.Element;
 import Actor.Actor;
+import Game.State;
 import Game.Status;
 import Game.TextHandler;
 import Items.Intent;
@@ -25,6 +26,7 @@ public abstract class Skill {
     protected Intent intent;
     protected TextHandler out = TextHandler.getInstance();
     protected Boolean AOE = false;
+    protected int duration = 0;
 
     public String getName() {
         return name;
@@ -48,6 +50,8 @@ public abstract class Skill {
 
     public Boolean isAOE() { return AOE; }
 
+    public int getDuration() { return duration;}
+
     /*
      * General use type for single hit techniques
      * Check if the technique will lower TP below zero, if not then do
@@ -69,7 +73,7 @@ public abstract class Skill {
                 threatBuilt = this.damage;
                 if (opponent.getHealth() <= 0) {
                     out.printToConsole(opponent.getName() + " has been felled!");
-                    opponent.setStatus(Status.State.FAINTED, -1);
+                    opponent.getStatus().setState(State.FAINTED, -1);
                 }
             } else {
                 //Attack missed
