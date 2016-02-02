@@ -22,12 +22,6 @@ public class AI {
 
     double LOW = .30;
 
-    public AI(Vector<Actor> h, Vector<Actor> e) {
-        heroes = h;
-        enemies = e;
-        generator = new RandomGenerator();
-    }
-
     public void takeTurn(int characterTurn, int greatestThreat) {
         this.characterTurn = characterTurn;
         Boolean heal = healWounded();
@@ -40,25 +34,26 @@ public class AI {
             //TODO: Replace this with more logic so attacking is a little less random
             int ATTACKTYPES = 4; //This is the total number of use methods
             int randomAttack = generator.getNumberBetween(1, ATTACKTYPES);
+            int target = seekFirstHero();
 
             switch(randomAttack) {
                 case 1:
                     //out.printToConsole("The AI chooses to attack the weakest.");
-                    enemies.get(characterTurn).attack(heroes.get(seekWeakest()));
+                    target = seekWeakest();
                     break;
                 case 2:
                     //out.printToConsole("The AI chooses to attack the strongest.");
-                    enemies.get(characterTurn).attack(heroes.get(seekStrongest()));
+                    target = seekStrongest();
                     break;
                 case 3:
                     //out.printToConsole("The AI chooses to attack the first living.");
-                    enemies.get(characterTurn).attack(heroes.get(seekFirstHero()));
+                    target = seekFirstHero();
                     break;
                 case 4:
                     //out.printToConsole("The AI Chooses to attack the biggest threat.");
-                    enemies.get(characterTurn).attack(heroes.get(greatestThreat));
+                    target = greatestThreat;
             }
-
+            enemies.get(characterTurn).attack(heroes.get(target));
         }
     }
 

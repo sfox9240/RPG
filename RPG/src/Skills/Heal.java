@@ -38,6 +38,7 @@ public class Heal extends Skill {
             attacker.subTechniquePoints(TPCost);
         } else {
             out.printToConsole("Not enough TP!");
+            return -1;
         }
         return threatBuilt;
     }

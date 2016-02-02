@@ -1,5 +1,7 @@
 package Game;
 
+import java.util.Vector;
+
 /**
  * Created by piano_000 on 6/1/2015.
  */
@@ -8,13 +10,16 @@ public class Status {
     private int stateDuration; //A duration of -1 is meant to last forever only applies for noraml and fainted status.
     private Illness illness;
     private int illnessDuration;
+    private Vector<Element> strengths;
+    private Vector<Element> weaknesses;
 
     public Status(State state, int sDuration, Illness illness, int iDuration) {
         this.state = state;
         this.stateDuration = sDuration;
         this.illness = illness;
         this.illnessDuration = iDuration;
-
+        strengths = new Vector<Element>();
+        weaknesses = new Vector<Element>();
     }
 
     public int getStateDuration() {
@@ -49,5 +54,37 @@ public class Status {
 
     public void elapseIllness(int numberOfTurns) {
         illnessDuration = illnessDuration - numberOfTurns;
+    }
+
+    public Vector<Element> getStrengths() {
+        return strengths;
+    }
+
+    public void setStrengths(Vector<Element> e) {
+        strengths = e;
+    }
+
+    public void addStrength(Element e) {
+        strengths.add(e);
+    }
+
+    public void removeStrength(Element e) {
+        strengths.remove(e);
+    }
+
+    public Vector<Element> getWeaknesses() {
+        return weaknesses;
+    }
+
+    public void setWeaknesses(Vector<Element> e) {
+        weaknesses = e;
+    }
+
+    public void addWeakness(Element e) {
+        weaknesses.add(e);
+    }
+
+    public void removeWeakness(Element e) {
+        weaknesses.remove(e);
     }
 }

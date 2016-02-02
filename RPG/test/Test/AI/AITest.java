@@ -2,6 +2,7 @@ package Test.AI;
 
 import Actor.*;
 import CombatAI.AI;
+import CombatAI.AiAlpha;
 import FightClasses.BanditKing;
 import FightClasses.Knight;
 import FightClasses.Wizard;
@@ -69,25 +70,25 @@ public class AITest {
 
     @Test
     public void TestSeekWeakest() {
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         Assert.assertSame(Zelda, party.get(ai.seekWeakest()));
     }
 
     @Test
     public void TestSeekStrongest() {
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         Assert.assertSame(Ganon, party.get(ai.seekStrongest()));
     }
 
     @Test
     public void TestSeekFirst() {
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         Assert.assertSame(Link, party.get(ai.seekFirstHero()));
     }
 
     @Test
     public void TestSeekWeakestAlly() {
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         g3.setHealth(3);
         Assert.assertSame(g3, enemies.get(ai.getWeakestAlly()));
         g1.setHealth(1);
@@ -98,7 +99,7 @@ public class AITest {
     public void TestHealWounded() {
         enemies.get(0).addItem(new RedHerb());
         g3.setHealth(4);
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         ai.setCharacterTurn(0);
         Assert.assertEquals(g3.getHealth(), 4, 0);
         ai.healWounded();
@@ -119,7 +120,7 @@ public class AITest {
     public void TestRestoreTP() {
         enemies.get(0).addItem(new MagicPotion());
         g3.setTechniquePoints(0);
-        AI ai = new AI(party, enemies);
+        AiAlpha ai = new AiAlpha(party, enemies);
         ai.setCharacterTurn(0);
         Assert.assertEquals(g3.getTechniquePoints(), 0, 0);
         ai.restoreTP();

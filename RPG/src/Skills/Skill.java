@@ -58,8 +58,6 @@ public abstract class Skill {
      * the technique.
      */
 
-    /* TODO: Rename "use" to "use". Also, use should return to inform if there was enough TP to do the use*/
-
     public double use(Actor attacker, Vector<Actor> opponents, int target) {
         double threatBuilt = 0;
         Actor opponent = opponents.get(target);
@@ -72,8 +70,7 @@ public abstract class Skill {
                 out.printToConsole(attacker.getName() + " dealt " + this.damage + " damage to " + opponent.getName());
                 threatBuilt = this.damage;
                 if (opponent.getHealth() <= 0) {
-                    out.printToConsole(opponent.getName() + " has been felled!");
-                    opponent.getStatus().setState(State.FAINTED, -1);
+                    opponent.cleanDeath();
                 }
             } else {
                 //Attack missed
@@ -82,7 +79,18 @@ public abstract class Skill {
             attacker.subTechniquePoints(TPCost);
         } else {
             out.printToConsole("Not enough TP!");
+            return -1;
         }
         return threatBuilt;
+    }
+
+    public Boolean isStrongAgainst(Vector<Actor> opponents, int target) {
+        Vector<Element> strengths = opponents.get(target).getStatus().getStrengths();
+        for(int i = 0; i < strengths.size(); i++) {
+            if(element.equals(strengths.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

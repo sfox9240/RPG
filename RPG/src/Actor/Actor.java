@@ -32,6 +32,8 @@ public abstract class Actor {
         return name;
     }
 
+    public void setName(String name) {this.name = name;}
+
     public double getHealth() {
         return health;
     }
@@ -139,7 +141,7 @@ public abstract class Actor {
     public Boolean hitCalculator() {
         RandomGenerator generator = new RandomGenerator();
         int hit = generator.getNumberBetween(0, 9);
-        if(hit < 8) {
+        if(hit < 6) {
             return true;
         } else {
             return false;
@@ -159,16 +161,15 @@ public abstract class Actor {
             } else { // Normal Atatck
                 opponent.subHealth(getCombatDmg());
                 threatBuilt = getCombatDmg();
-                out.printToConsole(name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
+                out.printToConsole("In actor: " + name + " dealt " + getCombatDmg() + " damage to " + opponent.getName());
             }
 
-            if(opponent.getHealth() <= 0) {
-                out.printToConsole(opponent.getName() + " has been felled!");
-                opponent.getStatus().setState(State.FAINTED, -1);
+            if(opponent.getStatus().getState() != State.FAINTED && opponent.getHealth() <= 0.0) {
+                opponent.cleanDeath();
             }
         } else {
             //Attack missed
-            out.printToConsole(name + " missed their attack!");
+            out.printToConsole("IN ACTOR: " + name + " missed their attack!");
         }
         return threatBuilt;
     }
@@ -197,9 +198,15 @@ public abstract class Actor {
                 out.printToConsole(name + " took " + burningDmg + " burning damage.");
                 break;
         }
-        if(health <= 0) {
-            //out.printToConsole(name + " has been felled!");
-            status.setState(State.FAINTED, -1);
+        if(health <= 0 && status.getState() != State.FAINTED) {
+            cleanDeath();
         }
+    }
+
+    public void cleanDeath() {
+        setHealth(0);
+        out.printToConsole(name + " has been felled!");
+        status.setIllness(Illness.NONE, 0);
+        status.setState(State.FAINTED, 0);
     }
 }

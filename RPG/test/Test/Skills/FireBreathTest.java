@@ -39,5 +39,29 @@ public class FireBreathTest {
 
         double threatcount = dragon.getSkills().get(0).use(dragon, party, 0);
         Assert.assertEquals((fb.getDamage() * 2), threatcount, 0);
+
+        dragon.setTechniquePoints(0);
+        double returnError = dragon.getSkills().get(0).use(dragon, party, 0);
+        Assert.assertEquals(-1, returnError, 0);
+    }
+
+    @Test
+    public void TestUseFailure() {
+        Hero Link = new Hero("Link", new Knight());
+        Hero Zelda = new Hero("Zelda", new Wizard());
+        Sword woodenSword = new Sword("Wooden Sword", "Just a sword made of wood", false);
+        Link.setWeapon(woodenSword);
+
+        Vector<Actor> party = new Vector<Actor>();
+        party.add(Link);
+        party.add(Zelda);
+
+        Dragon dragon = new Dragon();
+        FireBreath fb = new FireBreath();
+        dragon.addSkill(fb);
+
+        dragon.setTechniquePoints(0);
+        double returnError = dragon.getSkills().get(0).use(dragon, party, 0);
+        Assert.assertEquals(-1, returnError, 0);
     }
 }

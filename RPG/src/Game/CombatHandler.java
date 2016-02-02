@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import Actor.*;
 import CombatAI.AI;
+import CombatAI.AiAlpha;
 import Items.Intent;
 import Items.Item;
 import Skills.Skill;
@@ -21,9 +22,10 @@ public class CombatHandler {
 	protected Vector<Actor> heroes = null;
 	protected Vector<Actor> enemies = null;
 	protected ThreatAnalyzer heroThreat = null;
+	protected TextHandler out = null;
 
 	public CombatHandler() {
-		TextHandler out = TextHandler.getInstance();
+		out = TextHandler.getInstance();
 		System.out.println("Handler from CH: " + System.identityHashCode(out));
 	}
 
@@ -34,7 +36,7 @@ public class CombatHandler {
 	public void battleStart(Vector<Actor> heroes, Vector<Actor> enemies) {
 		this.heroes = heroes;
 		this.enemies = enemies;
-		AI enemyAI = new AI(heroes, enemies);
+		AI enemyAI = new AiAlpha(heroes, enemies);
 		heroThreat = new ThreatAnalyzer(heroes);
 
 		//While both teams are alive
@@ -54,12 +56,11 @@ public class CombatHandler {
 				enemies.get(j).takeStatusDamage();
 				if (enemies.get(j).getHealth() > 0 && seekOpponent(heroes) != -1) {
 					System.out.println(enemies.get(j).getName() + "'s turn!");
-					//Fancy AI use algorithm
-					enemyAI.takeTurn(j, heroThreat.getGreatestSource()); //Fancy AI use algorithm
+					enemyAI.takeTurn(j, heroThreat.getGreatestSource());
 				}
 			}
 			//Decrement illness and status durations
-			decrementStatusDurations();
+			//decrementStatusDurations();
 		}
 		victoryMessage();
 		clearBattleField();
@@ -97,6 +98,7 @@ public class CombatHandler {
 					break;
 				case "5":
 					//TODO: Implement Run and, you know, a place to run too...
+					out.printToConsole("Run is not yet implemented.");
 					break;
 				default:
 					break;
@@ -117,28 +119,7 @@ public class CombatHandler {
 		Actor attacker = heroes.get(heroTurn);
 		Actor opponent = enemies.get(target);
 
-		Boolean hit = attacker.hitCalculator();
-		if(hit) {
-			//Attack lands
-			if(opponent.getStatus().getState() == State.GUARDING) { //Guarding halves the amount of damage delivered
-				opponent.setHealth(opponent.getHealth() - (attacker.getCombatDmg() / 2));
-				System.out.println(opponent.getName() + " guarded against the attack!");
-				System.out.println(attacker.getName() + " dealt " + (attacker.getCombatDmg() / 2) + " damage to " + opponent.getName());
-				heroThreat.addThreat(heroTurn, (attacker.getCombatDmg() / 2));
-			} else {
-				opponent.setHealth(opponent.getHealth() - attacker.getCombatDmg());
-				System.out.println(attacker.getName() + " dealt " + attacker.getCombatDmg() + " damage to " + opponent.getName());
-				heroThreat.addThreat(heroTurn, attacker.getCombatDmg());
-			}
-
-			if(opponent.getHealth() <= 0) {
-				System.out.println(opponent.getName() + " has been felled!");
-				opponent.getStatus().setState(State.FAINTED, -1);
-			}
-		} else {
-			//Attack missed
-			System.out.println(attacker.getName() + " missed their attack!");
-		}
+		attacker.attack(opponent);
 		return true;
 	}
 
@@ -277,11 +258,21 @@ public class CombatHandler {
 						return false;
 					}
 					if (heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HEAL) { //HEAL Party Member
-						heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1)));
-						validResponse = true;
+						double skillResponse = heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), heroes, (target - 1));
+						if(skillResponse == -1) { //Not enough TP, return to playerAction
+							validResponse = false;
+						} else {
+							heroThreat.addThreat(heroTurn, skillResponse);
+							validResponse = true;
+						}
 					} else if (heroes.get(heroTurn).getSkills().get((actionVal - 1)).getIntent() == Intent.HARM) { //Harm Enemy
-						heroThreat.addThreat(heroTurn, heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1)));
-						validResponse = true;
+						double  skillResponse = heroes.get(heroTurn).getSkills().get((actionVal - 1)).use(heroes.get(heroTurn), enemies, (target - 1));
+						if(skillResponse == -1) { //Not enough TP, return to playerAction
+							validResponse = false;
+						} else {
+							heroThreat.addThreat(heroTurn, skillResponse);
+							validResponse = true;
+						}
 					} else { //Cannot Equip weapon during combat
 						System.out.println("Cannot equip weapons during combat");
 					}

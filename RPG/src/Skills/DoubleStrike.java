@@ -1,5 +1,6 @@
 package Skills;
 import Actor.Actor;
+import Game.State;
 import Game.TextHandler;
 import Items.Intent;
 
@@ -31,21 +32,14 @@ public class DoubleStrike extends Skill {
         double threatBuilt = 0;
         if((attacker.getTechniquePoints() - TPCost) >= 0) {
             out.printToConsole(attacker.getName() + " used " + name + "!");
-            //First Attack
-            if(attacker.hitCalculator()) {
-                threatBuilt = attacker.attack(opponent);
-            } else {
-                out.printToConsole(attacker.getName() + " missed their attack!");
-            }
-
-            if(opponent.getHealth() > 0 && attacker.hitCalculator()) { //If the opponent isn't dead, do the second use
-                threatBuilt = threatBuilt + attacker.attack(opponent);
-            } else {
-                out.printToConsole(attacker.getName() + " missed their attack!");
+            threatBuilt = attacker.attack(opponent);
+            if(opponent.getHealth() > 0.0 && opponent.getStatus().getState() != State.FAINTED) {
+                threatBuilt = threatBuilt + attacker.attack((opponent));
             }
             attacker.subTechniquePoints(TPCost);
         } else {
             out.printToConsole("Not enough TP!");
+            return -1;
         }
         return threatBuilt;
     }

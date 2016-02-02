@@ -1,6 +1,7 @@
 package Skills;
 
 import Actor.Actor;
+import Game.State;
 import Game.TextHandler;
 import Items.Intent;
 
@@ -33,10 +34,15 @@ public class FireBreath extends Skill {
                 opponent.setHealth(opponent.getHealth() - damage);
                 out.printToConsole(attacker.getName() + " dealt " + this.damage + " damage to " + opponent.getName());
                 threatBuilt = threatBuilt + damage;
+                if (opponent.getHealth() <= 0.0) {
+                    out.printToConsole(opponent.getName() + " has been felled!");
+                    opponent.cleanDeath();
+                }
             }
             attacker.subTechniquePoints(TPCost);
         } else {
             out.printToConsole("Not enough TP!");
+            return -1;
         }
         return threatBuilt;
     }

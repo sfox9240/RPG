@@ -1,23 +1,27 @@
 package Test.Skills;
+
 import Actor.Actor;
 import Actor.Hero;
 import FightClasses.Knight;
 import FightClasses.Wizard;
+import Game.Illness;
 import Items.Sword;
 import Skills.DoubleStrike;
-import org.junit.*;
+import Skills.PoisonCloud;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Vector;
 
 /**
- * Created by piano_000 on 9/4/2015.
+ * Created by piano_000 on 2/2/2016.
  */
-public class DoubleStrikeTest {
+public class PoisonCloudTest {
 
     @Test
     public void TestInit(){
-        DoubleStrike ds = new DoubleStrike();
-        Assert.assertNotNull(ds);
+        PoisonCloud pc = new PoisonCloud();
+        Assert.assertNotNull(pc);
     }
 
     @Test
@@ -26,17 +30,18 @@ public class DoubleStrikeTest {
         Hero Zelda = new Hero("Zelda", new Wizard());
         Sword woodenSword = new Sword("Wooden Sword", "Just a sword made of wood", false);
         Link.setWeapon(woodenSword);
+        Zelda.addSkill(new PoisonCloud());
 
         Vector<Actor> party = new Vector<Actor>();
         party.add(Link);
         party.add(Zelda);
 
-        double threatcount = Link.getSkills().get(0).use(Link, party, 1);
+        Assert.assertEquals(Illness.NONE, Link.getStatus().getIllness());
+        double threatcount = Zelda.getSkills().get(1).use(Zelda, party, 0);
         Assert.assertNotNull(threatcount);
-
-        Link.setTechniquePoints(0);
-        double returnError = Link.getSkills().get(0).use(Link, party, 1);
-        Assert.assertEquals(-1, returnError, 0);
+        Assert.assertEquals(0, threatcount, 0);
+        Assert.assertEquals(Illness.POISON, Link.getStatus().getIllness());
+        Assert.assertEquals(new PoisonCloud().getDuration(), Link.getStatus().getIllnessDuration(), 0);
     }
 
     @Test
@@ -45,13 +50,17 @@ public class DoubleStrikeTest {
         Hero Zelda = new Hero("Zelda", new Wizard());
         Sword woodenSword = new Sword("Wooden Sword", "Just a sword made of wood", false);
         Link.setWeapon(woodenSword);
+        Zelda.addSkill(new PoisonCloud());
 
         Vector<Actor> party = new Vector<Actor>();
         party.add(Link);
         party.add(Zelda);
 
-        Link.setTechniquePoints(0);
-        double returnError = Link.getSkills().get(0).use(Link, party, 1);
-        Assert.assertEquals(-1, returnError,0);
+        Assert.assertEquals(Illness.NONE, Link.getStatus().getIllness());
+        Zelda.setTechniquePoints(0);
+        double returnError = Zelda.getSkills().get(1).use(Zelda, party, 0);
+        Assert.assertNotNull(returnError);
+        Assert.assertEquals(-1, returnError, 0);
+
     }
 }

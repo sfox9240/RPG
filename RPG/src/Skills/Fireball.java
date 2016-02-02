@@ -4,9 +4,9 @@ import Items.Intent;
 /**
  * Created by piano_000 on 5/22/2015.
  */
-public class Fireball extends Skill{
+public class FireBall extends Skill{
 
-    public Fireball() {
+    public FireBall() {
         this.name = "Fire Ball";
         this.description = "Launch a weak fireball";
         this.damage = 6;

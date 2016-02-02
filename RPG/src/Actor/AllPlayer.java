@@ -1,6 +1,5 @@
 package Actor;
 
-import FightClasses.BattleClass;
 import Items.Weapon;
 import Skills.*;
 
@@ -18,7 +17,7 @@ public class AllPlayer extends Actor {
         techniquePoints = 1000;
         maxTechniquePoints = 1000;
         skills.add(new DoubleStrike());
-        skills.add(new Fireball());
+        skills.add(new FireBall());
         skills.add(new FireBreath());
         skills.add(new TripleStrike());
         skills.add(new WeakHealAll());

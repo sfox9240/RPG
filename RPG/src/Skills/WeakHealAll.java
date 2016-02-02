@@ -32,6 +32,7 @@ public class WeakHealAll extends Skill {
             attacker.setTechniquePoints(attacker.getTechniquePoints() - TPCost);
         } else {
             out.printToConsole("Not enough TP!");
+            return -1;
         }
         return threatBuilt;
     }

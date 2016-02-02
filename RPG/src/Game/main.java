@@ -43,9 +43,9 @@ public class main {
 		
 		Vector<Actor> enemies = new Vector<>();
 
-		Guard g1 = new Guard(); enemies.add(g1);
-		Guard g2 = new Guard(); enemies.add(g2);
-		Guard g3 = new Guard(); enemies.add(g3);
+		Guard g1 = new Guard(); g1.setName("Guard A"); enemies.add(g1);
+		Guard g2 = new Guard(); g2.setName("Guard B"); enemies.add(g2);
+		Guard g3 = new Guard(); g3.setName("Guard C"); enemies.add(g3);
 
 		//Goblin g1 = new Goblin();
 		//Goblin g2 = new Goblin();
@@ -75,43 +75,14 @@ public class main {
 		out.printToConsole("ZELDA INV:");
 		Zelda.printInventory();
 
-		TripleStrike ts = new TripleStrike();
 		Heal heals = new Heal();
-		Fireball fb = new Fireball();
 		Link.addSkill(new TripleStrike());
-		Link.addSkill(new Fireball());
+		Link.addSkill(new FireBall());
 		Zelda.addSkill(heals);
 		Zelda.addSkill(new PoisonCloud());
 		WeakHealAll wha = new WeakHealAll();
 		Zelda.addSkill(wha);
 
 		BATTLE.battleStart(party, enemies);
-		/*out.printToConsole("BATTLE START!");
-		while(Zelda.getHealth() > 0 && Link.getHealth() > 0) {
-
-			Zelda.use(Link);
-			Zelda.printStatus();
-			Link.printStatus();
-			Link.use(Zelda);
-			Zelda.printStatus();
-			if(Zelda.getHealth() < 10 && Zelda.getItems().contains(redHerb)) {
-				Zelda.getItems().get(0).use(Zelda, Zelda);
-			}
-			if(Link.getHealth() < 10 && Link.getItems().contains(greenHerb)) {
-				Link.getItems().get(0).use(Link, Link);
-			}
-			Link.printStatus();
-			Zelda.useSpecial(Link);
-			Zelda.printStatus();
-			Link.printStatus();
-			Link.useSpecial(Zelda);
-
-			if(Zelda.getHealth() < 10 && !Zelda.getItems().contains(redHerb)) {
-				Zelda.getItems().get(0).use(Zelda, Link);
-			}
-		}
-
-		Link.printInventory();
-		Zelda.printInventory();*/
 	}
 }

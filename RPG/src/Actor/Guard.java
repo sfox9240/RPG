@@ -2,6 +2,7 @@ package Actor;
 import Actor.*;
 import Items.*;
 import Skills.DoubleStrike;
+import Skills.Heal;
 
 import java.util.Vector;
 

@@ -53,6 +53,26 @@ public class WeakHealAllTest {
         Zelda.setTechniquePoints(50);
         threatcount = Zelda.getSkills().get(1).use(Zelda, party, 0);
         Assert.assertEquals(threatcount, 25, 0);
+    }
 
+    @Test
+    public void TestUseFail() {
+        Hero Link = new Hero("Link", new Knight());
+        Hero Zelda = new Hero("Zelda", new Wizard());
+        Hero Ganon = new Hero("Ganon", new Knight());
+        Sword woodenSword = new Sword("Wooden Sword", "Just a sword made of wood", false);
+        Link.setWeapon(woodenSword);
+
+        Vector<Actor> party = new Vector<Actor>();
+        party.add(Link);
+        party.add(Zelda);
+        party.add(Ganon);
+
+        WeakHealAll HA = new WeakHealAll();
+        Zelda.addSkill(HA);
+
+        Zelda.setTechniquePoints(0);
+        double returnError = Zelda.getSkills().get(1).use(Zelda, party, 0);
+        Assert.assertEquals(-1, returnError, 0);
     }
 }
